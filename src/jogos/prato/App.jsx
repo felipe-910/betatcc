@@ -69,16 +69,21 @@ const GRUPOS = [
 const MASCARA = { esq: zonaEsq, dirTop: zonaDirTop, dirBot: zonaDirBot }; // formato real de cada divisão
 // posição (fração da divisão) de cada alimento, conforme quantos estão na divisão
 
-// Feedbacks positivos (arquivo MontePrato_Feedbacks_Positivos.docx). Cada um: título = primeira frase, texto = o resto.
+// Feedbacks positivos (arquivo "feedbacks positivos monte seu prato.docx"), exatamente como no arquivo.
+// Cada um: título = primeira frase, texto = o resto. Em cada situação, sorteia um dos dois.
 const FEEDBACKS = {
-  completo: [ // FP01, FP02 e FP06: prato adequado com arroz e feijão (sorteia um)
-    { titulo: 'Uau!', texto: 'Você montou um prato muito caprichado! O arroz, o feijão e os outros alimentos ajudam a fornecer os nutrientes de que nosso corpo precisa. Parabéns pelas escolhas!' },
-    { titulo: 'Muito bem!', texto: 'Seu prato ficou cheio de alimentos importantes para o nosso corpo! Comer alimentos variados ajuda a ter energia para brincar, aprender e crescer. Continue assim!' },
-    { titulo: 'Que prato bonito e variado!', texto: 'Você combinou diferentes alimentos que ajudam o nosso corpo a funcionar bem. Cada grupo tem sua importância, e variar as escolhas é uma ótima maneira de cuidar da saúde. Arrasou!' },
+  completo: [ // 1 — prato completo e boas escolhas (com arroz e feijão)
+    { titulo: 'Uau, você arrasou!', texto: 'Seu prato ficou cheio de alimentos nutritivos! O arroz, o feijão, as verduras, os legumes e os outros alimentos ajudam nosso corpo a receber os nutrientes de que precisa. Parabéns pelas escolhas!' },
+    { titulo: 'Muito bem!', texto: 'Você montou um prato bem variado, com alimentos de diferentes grupos! Cada um deles tem sua importância para o nosso corpo. Continue fazendo boas escolhas e aprendendo sobre alimentação!' },
   ],
-  semFeijao: { titulo: 'Muito bom o seu prato!', texto: 'Você fez ótimas escolhas. Mas, na próxima, que tal adicionar feijão também? Ele tem nutrientes importantes para o nosso corpo. Vamos deixar esse prato ainda mais completo?' }, // FP03
-  semArroz: { titulo: 'Mandou bem!', texto: 'Seu prato tem alimentos importantes para a nossa saúde. Mas não se esqueça do arroz na próxima rodada! Ele é uma fonte de energia para brincar, estudar e aproveitar o dia. Vamos tentar?' }, // FP04
-  semAmbos: { titulo: 'Você montou um prato cheio de boas escolhas!', texto: 'Mas sabe o que ficou faltando? O arroz e o feijão! Eles fazem parte de muitas refeições e fornecem nutrientes importantes para o nosso corpo. Que tal incluí-los na próxima vez?' }, // FP05
+  orientacao: [ // 2 — prato adequado, mas com um alimento que deve ser consumido com menor frequência
+    { titulo: 'Parabéns!', texto: 'Você montou um prato com vários alimentos importantes para a nossa saúde! Mas lembre-se: variar os alimentos é uma ótima maneira de conseguir diferentes nutrientes. Vamos continuar aprendendo?' },
+    { titulo: 'Mandou bem!', texto: 'Seu prato ficou muito legal! Você já sabe que cada grupo de alimentos tem sua importância. Na próxima rodada, continue prestando atenção nas escolhas para montar uma refeição ainda mais variada!' },
+  ],
+  semArrozFeijao: [ // 3 — prato adequado, mas sem arroz, sem feijão ou sem os dois
+    { titulo: 'Muito bom o seu prato!', texto: 'Você fez boas escolhas, mas percebeu que faltou um alimento importante? O arroz e o feijão fornecem nutrientes importantes para o nosso corpo. Na próxima rodada, tente incluir os dois também!' },
+    { titulo: 'Você está indo muito bem!', texto: 'Seu prato tem alimentos que ajudam a cuidar da nossa saúde. Para deixá-lo ainda mais completo, lembre-se do arroz e do feijão, que fazem parte de muitas refeições brasileiras. Vamos continuar praticando?' },
+  ],
 };
 // Feedbacks negativos (arquivo feedbacks_negativos_monte_seu_prato.docx). Mesmo formato: título = primeira frase, texto = o resto.
 const FEEDBACKS_NEG = {
@@ -415,7 +420,9 @@ function Jogo({ onSair, narrador }) {
     if (!completo) {
       fb = FEEDBACKS_NEG.poucos;                                    // tempo acabou: prato incompleto/pouco variado
     } else if (problemas === 0) {
-      fb = temArroz && temFeijao ? FEEDBACKS.completo : temArroz ? FEEDBACKS.semFeijao : temFeijao ? FEEDBACKS.semArroz : FEEDBACKS.semAmbos;
+      fb = temArroz && temFeijao ? FEEDBACKS.completo : FEEDBACKS.semArrozFeijao;
+    } else if (problemas === 1 && erros.length === 0) {
+      fb = FEEDBACKS.orientacao;                                    // tudo no lugar certo, mas com um alimento de consumo menos frequente
     } else if (problemas >= 2) {
       fb = FEEDBACKS_NEG.ajustes;                                   // muitas escolhas precisam de ajustes
     } else if (!temArroz && !temFeijao) {
