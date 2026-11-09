@@ -1,0 +1,37 @@
+/* Telas de história (escolha do narrador + caixa de diálogo). Tudo com prefixo hs- para não misturar com o CSS dos jogos. */
+.hs-tela{position:relative;max-width:520px;height:100%;margin:0 auto;display:flex;flex-direction:column;overflow:hidden;background:#9dd4d1;container-type:inline-size;font-family:'Nunito',system-ui,sans-serif;color:#2d3a3a}
+.hs-header{position:relative;z-index:4;display:flex;align-items:center;gap:6px;padding:14px 14px 8px;flex:none}
+.hs-voltar{width:44px;height:44px;display:flex;align-items:center;justify-content:center;filter:drop-shadow(0 2px 0 #0002)}
+.hs-titulo{flex:1;text-align:center;font-size:30px;font-weight:900;color:#6aaa7e;-webkit-text-stroke:7px #fff;paint-order:stroke fill;text-shadow:0 4px 0 #0003;letter-spacing:.2px}
+
+/* quadro branco (na escolha mostra o jogo; na história é onde o personagem aparece) */
+.hs-palco{position:relative;flex:1 1 0;min-height:0;margin:0 14px;background:#fff;border:3px solid #6aaa7e;border-radius:26px;overflow:hidden;display:flex;align-items:center;justify-content:center}
+.hs-jogo-img{max-width:62%;max-height:62%;object-fit:contain;filter:drop-shadow(0 6px 5px #0003);user-select:none;-webkit-user-drag:none}
+.hs-palco--historia{align-items:flex-end;padding-bottom:0}
+.hs-video{display:block;height:100%;width:auto;max-width:100%;object-fit:contain;object-position:center bottom;background:#fff;clip-path:inset(0 0 10% 0);margin-bottom:-10%;pointer-events:none}
+
+/* painel de baixo da escolha */
+.hs-painel{flex:none;position:relative;z-index:3;margin-top:-26px;background:#fff;border:3px solid #6aaa7e;border-bottom:0;border-radius:44px 44px 0 0;padding:20px 5.6cqw calc(18px + env(safe-area-inset-bottom,0px));display:flex;flex-direction:column;gap:10px}
+.hs-ouvir{display:flex;align-items:center;gap:0;height:64px;background:#9dd4d1;border:3px solid #7fb9b6;border-radius:8px;box-shadow:0 4px 0 #0002;padding:0 14px}
+.hs-ouvir-icone{width:48px;height:48px;border-radius:14px;background:#fff;border:2px solid #7fb9b6;display:flex;align-items:center;justify-content:center;flex:none}
+.hs-ouvir-texto{flex:1;text-align:center;color:#fff;font-size:20px;font-weight:900;text-shadow:0 2px 0 #0002}
+.hs-narrador-rotulo{text-align:center;font-size:19px;font-weight:800;color:#000}
+.hs-cartoes{display:grid;grid-template-columns:1fr 1fr;gap:4.2cqw}
+.hs-cartao{position:relative;height:96px;border:3px solid;border-radius:8px;box-shadow:0 4px 0 #0002;display:flex;align-items:flex-end;justify-content:flex-end;padding:8px 12px;transition:transform .1s}
+.hs-cartao:active{transform:translateY(3px);box-shadow:0 1px 0 #0002}
+.hs-cartao-avatar{position:absolute;left:8px;top:8px;width:56px;height:56px;border-radius:50%;border:3px solid #fff;background:#fff;object-fit:cover;user-select:none;-webkit-user-drag:none}
+.hs-cartao-nome{color:#fff;font-size:19px;font-weight:900;text-shadow:0 2px 0 #0003}
+
+/* caixa de diálogo (parte de baixo, como nos jogos de história) */
+.hs-dialogo{flex:none;position:relative;z-index:3;margin:-30px 10px calc(12px + env(safe-area-inset-bottom,0px));padding:26px 16px 12px;background:#fff;border:3px solid #6aaa7e;border-radius:24px;box-shadow:0 5px 0 #0002;animation:hs-sobe .25s ease-out}
+@keyframes hs-sobe{from{transform:translateY(10px);opacity:.6}to{transform:none;opacity:1}}
+.hs-nome{position:absolute;left:14px;top:-18px;min-width:96px;text-align:center;padding:4px 18px;border:3px solid;border-radius:12px;color:#fff;font-size:19px;font-weight:900;text-shadow:0 2px 0 #0003;box-shadow:0 3px 0 #0002}
+.hs-texto{display:grid;cursor:pointer;font-size:clamp(14px,min(4.5cqw,2.55vh),20px);font-weight:800;line-height:1.32;color:#2d3a3a;-webkit-user-select:none;user-select:none}
+.hs-reserva,.hs-vivo{grid-area:1/1}
+.hs-reserva{visibility:hidden}
+.hs-rodape{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:10px}
+.hs-pontos{display:flex;flex-wrap:wrap;gap:5px;flex:1;min-width:0}
+.hs-pontos i{width:9px;height:9px;border-radius:50%;background:#d9e8dd}
+.hs-pontos i.on{background:#6aaa7e}
+.hs-proxima{flex:none;display:inline-flex;align-items:center;gap:8px;background:#78b58a;color:#fff;font-size:19px;font-weight:900;padding:10px 20px;border-radius:14px;border:3px solid #5f9d72;box-shadow:0 4px 0 #0002;transition:transform .1s}
+.hs-proxima:active{transform:translateY(2px)}

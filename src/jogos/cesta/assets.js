@@ -1,0 +1,36 @@
+import maca from './assets/maca.png';
+import laranja from './assets/laranja.png';
+import banana from './assets/banana.png';
+import cenoura from './assets/cenoura.png';
+import pao from './assets/pao.png';
+import queijo from './assets/queijo.png';
+import salsicha from './assets/salsicha.png';
+import bombom from './assets/bombom.png';
+import refri from './assets/refri.png';
+import abobora from './assets/abobora.png';
+import batata from './assets/batata.png';
+import brocolis from './assets/brocolis.png';
+import carne from './assets/carne.png';
+import frango from './assets/frango.png';
+import macarrao from './assets/macarrao.png';
+import milho from './assets/milho.png';
+import nuggets from './assets/nuggets.png';
+import ovo from './assets/ovo.png';
+import tomate from './assets/tomate.png';
+import melancia from './assets/melancia.png';
+import abacaxi from './assets/abacaxi.png';
+import uva from './assets/uva.png';
+import chuchu from './assets/chuchu.png';
+import beterraba from './assets/beterraba.png';
+import alface from './assets/alface.png';
+import agriao from './assets/agriao.png';
+import couve from './assets/couve.png';
+import cesta from './assets/cesta.png';
+import cenario from './assets/cenario.jpg';
+import personagem from './assets/personagem.png';
+import balao from './assets/balao.png';
+
+export const IMAGENS = { maca, laranja, banana, cenoura, pao, queijo, salsicha, bombom, refri, abobora, batata, brocolis, carne, frango, macarrao, milho, nuggets, ovo, tomate, melancia, abacaxi, uva, chuchu, beterraba, alface, agriao, couve };
+// proporção (largura / altura) de cada sprite, para os alimentos finos ou largos não ficarem pequenos demais
+export const PROPORCAO = { maca: 0.82, laranja: 0.895, banana: 1.133, cenoura: 1.185, pao: 1.237, queijo: 0.941, salsicha: 2.151, bombom: 1.053, refri: 0.566, abobora: 0.996, batata: 0.945, brocolis: 0.93, carne: 1.488, frango: 1.231, macarrao: 2.51, milho: 1.036, nuggets: 1.024, ovo: 1.829, tomate: 0.918, melancia: 1.855, abacaxi: 0.488, uva: 0.773, chuchu: 0.621, beterraba: 1.249, alface: 1.213, agriao: 0.551, couve: 1.113 };
+export { cesta as CESTA, cenario as CENARIO, personagem as PERSONAGEM, balao as BALAO };
