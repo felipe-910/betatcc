@@ -22,7 +22,7 @@ button{font:inherit;border:0;cursor:pointer;background:none;-webkit-tap-highligh
 .zonas{position:absolute;inset:0;display:flex;flex-direction:column}
 .zonas button{flex:1}
 .poste{flex:1;min-height:20px;width:12px;background:linear-gradient(90deg,#9aa1a5,#b9bfc2 45%,#8a9296)}
-.cartao{margin-top:60px;width:150px;height:170px;background:var(--card);border:4px solid var(--verde);border-radius:6px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:8px;animation:pop .35s ease-out;box-shadow:0 4px 0 #0002}
+.cartao{margin-top:60px;width:150px;height:170px;background:var(--card);border:0;border-radius:6px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:8px;animation:pop .35s ease-out;box-shadow:0 4px 0 #0002}
 .cartao img{width:110px;height:110px;object-fit:contain}
 .cartao span{margin-top:6px;font-size:18px;font-weight:800}
 .tremer{animation:pop .35s ease-out,tremer .3s .1s}
