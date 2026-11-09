@@ -8,9 +8,9 @@ import imgCesta from '../jogos/cesta/assets/cesta.png';
 // Versão beta para a escola: só esta tela e os 3 minigames (sem login e sem salvar nada).
 // Cada opção abre um minigame (página própria em /jogos, aberta num iframe).
 const JOGOS = [
-  { id: 'prato', nome: 'Monte seu prato', descricao: 'Arraste os alimentos e monte um prato equilibrado.', url: '/jogos/prato.html', imagem: imgPrato, fundo: '#ffeccb' },
+  { id: 'cesta', nome: 'Cesta Saudável', descricao: 'Mova a cesta e pegue os alimentos que caem.', url: '/jogos/cesta.html', imagem: imgCesta, fundo: '#d9f0fb' },
   { id: 'semaforo', nome: 'Semáforo Saudável', descricao: 'Escolha a cor do semáforo de cada alimento.', url: '/jogos/semaforo.html', imagem: imgSemaforo, fundo: '#dcf3e0' },
-  { id: 'cesta', nome: 'Cesta Saudável', descricao: 'Mova a cesta e pegue os alimentos que caem.', url: '/jogos/cesta.html', imagem: imgCesta, fundo: '#d9f0fb' }
+  { id: 'prato', nome: 'Monte seu prato', descricao: 'Arraste os alimentos e monte um prato equilibrado.', url: '/jogos/prato.html', imagem: imgPrato, fundo: '#ffeccb' }
 ] as const;
 
 // "Histórias" com uma cor em cada letra
