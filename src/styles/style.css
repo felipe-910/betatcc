@@ -2205,3 +2205,12 @@ body.historias-page {
 @media (min-width: 720px) {
   .child-body.perf-pagina { max-width: 640px; }
 }
+
+/* ---- cartões dos minigames com a capa de cada jogo ---- */
+.hist-cartao { flex-direction: column; align-items: stretch; gap: clamp(8px, 2.4cqw, 14px); min-height: 0; padding: clamp(8px, 2.2cqw, 14px); }
+.hist-cartao-capa { display: block; width: 100%; height: auto; aspect-ratio: 1600 / 1087; object-fit: cover; border-radius: clamp(16px, 4cqw, 26px); }
+.hist-cartao-rodape { display: flex; align-items: center; gap: clamp(10px, 3cqw, 18px); padding: 0 clamp(4px, 1.4cqw, 10px) clamp(2px, 1cqw, 6px); }
+@media (min-width: 820px) {
+  .hist-cartao { min-height: 0; padding: 14px; justify-content: flex-start; }
+  .hist-cartao-rodape { flex: 1; flex-direction: column; justify-content: space-between; gap: 12px; padding: 0 8px 8px; }
+}

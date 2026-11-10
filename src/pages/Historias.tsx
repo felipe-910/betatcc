@@ -1,9 +1,10 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { usePagina } from '../lib/usePagina';
 import { Arbusto, Colinas, Nuvem, Sol } from '../components/CenarioHistorias';
-import imgPrato from '../jogos/prato/assets/prato.png';
-import imgSemaforo from '../jogos/semaforo/assets/semaforo-verde.png';
-import imgCesta from '../jogos/cesta/assets/cesta.png';
+// capas dos minigames (Alice e Luca com o tema de cada jogo)
+import imgPrato from '../assets/capas/prato.jpg';
+import imgSemaforo from '../assets/capas/semaforo.jpg';
+import imgCesta from '../assets/capas/cesta.jpg';
 
 // Versão beta para a escola: só esta tela e os 3 minigames (sem login e sem salvar nada).
 // Cada opção abre um minigame (página própria em /jogos, aberta num iframe).
@@ -87,14 +88,14 @@ export default function Historias() {
               aria-label={`Abrir história ${i + 1}: ${jogo.nome}`}
               onClick={() => setJogoAberto(i)}
             >
-              <span className="hist-cartao-img" style={{ background: jogo.fundo }}>
-                <img src={jogo.imagem} alt="" />
+              <img className="hist-cartao-capa" src={jogo.imagem} alt="" style={{ background: jogo.fundo }} />
+              <span className="hist-cartao-rodape">
+                <span className="hist-cartao-texto">
+                  <span className="hist-cartao-nome">{jogo.nome}</span>
+                  <span className="hist-cartao-desc">{jogo.descricao}</span>
+                </span>
+                <span className="hist-cartao-jogar" aria-hidden="true">Jogar ▶</span>
               </span>
-              <span className="hist-cartao-texto">
-                <span className="hist-cartao-nome">{jogo.nome}</span>
-                <span className="hist-cartao-desc">{jogo.descricao}</span>
-              </span>
-              <span className="hist-cartao-jogar" aria-hidden="true">Jogar ▶</span>
             </button>
           ))}
         </div>
