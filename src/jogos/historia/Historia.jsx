@@ -12,14 +12,6 @@ function Seta() {
     </svg>
   );
 }
-function Alto() {
-  return (
-    <svg viewBox="0 0 32 32" width="30" height="30" aria-hidden="true">
-      <path d="M5 12h5l7-6v20l-7-6H5z" fill="#7fb9b6" stroke="#7fb9b6" strokeWidth="2" strokeLinejoin="round" />
-      <path d="M21 11.5a6 6 0 0 1 0 9M24.5 8a11 11 0 0 1 0 16" fill="none" stroke="#7fb9b6" strokeWidth="2.4" strokeLinecap="round" />
-    </svg>
-  );
-}
 function Proxima() {
   return (
     <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true">
@@ -49,10 +41,6 @@ function Escolha({ titulo, imagem, fundo, onEscolher, onSair }) {
         {imagem && <img className="hs-jogo-img" src={imagem} alt="" draggable={false} />}
       </div>
       <div className="hs-painel">
-        <div className="hs-ouvir">
-          <span className="hs-ouvir-icone"><Alto /></span>
-          <span className="hs-ouvir-texto">Ouvir história</span>
-        </div>
         <div className="hs-narrador-rotulo" id="hs-narrador">Narrador</div>
         <div className="hs-cartoes" role="group" aria-labelledby="hs-narrador">
           {['alice', 'luca'].map((id) => {
@@ -116,7 +104,7 @@ function CaixaFala({ narrador, texto, voz, reserva, indice, total, onFalando, on
           {Array.from({ length: total }, (_, i) => <i key={i} className={i <= indice ? 'on' : ''} />)}
         </div>
         <button className="hs-proxima" onClick={clicar}>
-          {ultima && completo ? 'Jogar' : 'Próxima'}<Proxima />
+          Próxima<Proxima />
         </button>
       </div>
     </div>
@@ -129,6 +117,7 @@ function Historia2({ jogo, titulo, narrador, onFim, onVoltar }) {
   const reserva = falas.reduce((a, b) => (b.length > a.length ? b : a), '');
   const [i, setI] = useState(0);
   const [falando, setFalando] = useState(false);
+  const [perguntar, setPerguntar] = useState(false); // terminou a história: "Deseja ouvir novamente?"
   const video = useRef(null);
 
   useEffect(() => {
@@ -143,7 +132,8 @@ function Historia2({ jogo, titulo, narrador, onFim, onVoltar }) {
     }
   }, [falando]);
 
-  const proxima = () => (i + 1 >= falas.length ? onFim(narrador.id) : setI(i + 1));
+  const proxima = () => (i + 1 >= falas.length ? setPerguntar(true) : setI(i + 1));
+  const ouvirDeNovo = () => { setPerguntar(false); setI(0); };
 
   return (
     <Tela titulo={titulo} onVoltar={onVoltar}>
@@ -160,7 +150,18 @@ function Historia2({ jogo, titulo, narrador, onFim, onVoltar }) {
           aria-label={`${narrador.nome} contando a história`}
         />
       </div>
+      {perguntar ? (
+        <div className="hs-dialogo hs-pergunta">
+          <div className="hs-nome" style={{ background: narrador.cor, borderColor: narrador.borda }}>{narrador.nome}</div>
+          <p className="hs-pergunta-texto">Deseja ouvir novamente?</p>
+          <div className="hs-pergunta-botoes">
+            <button className="hs-proxima hs-sim" onClick={ouvirDeNovo}>Sim</button>
+            <button className="hs-proxima hs-nao" onClick={() => onFim(narrador.id)}>Não</button>
+          </div>
+        </div>
+      ) : (
       <CaixaFala key={i} narrador={narrador} texto={falas[i]} voz={narrador.id === 'luca' ? vozDaHistoria(jogo, i) : null} reserva={reserva} indice={i} total={falas.length} onFalando={setFalando} onProxima={proxima} />
+      )}
     </Tela>
   );
 }

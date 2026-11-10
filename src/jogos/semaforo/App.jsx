@@ -18,6 +18,7 @@ import laranja from '../cesta/assets/laranja.png';
 import cenoura from '../cesta/assets/cenoura.png';
 import maca from '../cesta/assets/maca.png';
 import carro from './assets/carro.png';
+import cenario from './assets/cenario.jpg';
 import personagem from './assets/personagem.png';
 import balao from './assets/balao.png';
 
@@ -76,15 +77,13 @@ const sortear = () => [...ALIMENTOS].sort(() => Math.random() - 0.5);
 
 function Tela({ titulo, onVoltar, tema, children }) {
   return (
-    <div className={`tela${tema ? ` ${tema}` : ''}`}>
+    <div className={`tela${tema ? ` ${tema}` : ''}`} style={tema ? undefined : { backgroundImage: `url(${cenario})` }}>
       <div className="header">
         <button className="voltar" onClick={onVoltar} style={{ visibility: onVoltar ? 'visible' : 'hidden' }}>←</button>
         <div className="titulo">{titulo}</div>
         <div className="voltar" />
       </div>
       {children}
-      <div className="calcada" />
-      <div className="rua" />
       <img className="carro" src={CARRO} alt="" />
     </div>
   );

@@ -12,9 +12,6 @@
 
 /* painel de baixo da escolha */
 .hs-painel{flex:none;position:relative;z-index:3;margin-top:-26px;background:#fff;border:3px solid #6aaa7e;border-bottom:0;border-radius:44px 44px 0 0;padding:20px 5.6cqw calc(18px + env(safe-area-inset-bottom,0px));display:flex;flex-direction:column;gap:10px}
-.hs-ouvir{display:flex;align-items:center;gap:0;height:64px;background:#9dd4d1;border:3px solid #7fb9b6;border-radius:8px;box-shadow:0 4px 0 #0002;padding:0 14px}
-.hs-ouvir-icone{width:48px;height:48px;border-radius:14px;background:#fff;border:2px solid #7fb9b6;display:flex;align-items:center;justify-content:center;flex:none}
-.hs-ouvir-texto{flex:1;text-align:center;color:#fff;font-size:20px;font-weight:900;text-shadow:0 2px 0 #0002}
 .hs-narrador-rotulo{text-align:center;font-size:19px;font-weight:800;color:#000}
 .hs-cartoes{display:grid;grid-template-columns:1fr 1fr;gap:4.2cqw}
 .hs-cartao{position:relative;height:96px;border:3px solid;border-radius:8px;box-shadow:0 4px 0 #0002;display:flex;align-items:flex-end;justify-content:flex-end;padding:8px 12px;transition:transform .1s}
@@ -35,3 +32,9 @@
 .hs-pontos i.on{background:#6aaa7e}
 .hs-proxima{flex:none;display:inline-flex;align-items:center;gap:8px;background:#78b58a;color:#fff;font-size:19px;font-weight:900;padding:10px 20px;border-radius:14px;border:3px solid #5f9d72;box-shadow:0 4px 0 #0002;transition:transform .1s}
 .hs-proxima:active{transform:translateY(2px)}
+
+/* pergunta no fim da história */
+.hs-pergunta-texto{margin:4px 0 0;text-align:center;font-size:clamp(17px,5cqw,22px);font-weight:900;color:#2d3a3a}
+.hs-pergunta-botoes{display:flex;justify-content:center;gap:14px;margin-top:14px}
+.hs-pergunta-botoes .hs-proxima{min-width:110px;justify-content:center}
+.hs-nao{background:#e8857f;border-color:#cf6a64}
