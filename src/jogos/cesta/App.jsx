@@ -120,8 +120,9 @@ function Partida({ onFim, onSair }) {
 
     const medir = () => {
       W = campo.clientWidth; H = campo.clientHeight;
-      tam = clamp(W * 0.15, 44, 68);
-      bw = clamp(W * 0.36, 112, 170);
+      // no celular o limite é 68 / 170 px; em telas altas (computador) alimentos e cesta crescem um pouco
+      tam = clamp(W * 0.15, 44, Math.max(68, H * 0.1));
+      bw = clamp(W * 0.36, 112, Math.max(170, H * 0.26));
       bh = bw * ASPECTO_CESTA;
       cestas.forEach((c) => { c.style.width = `${bw}px`; c.style.height = `${bh}px`; });
       g.x = clamp(g.x || W / 2, bw / 2, W - bw / 2);

@@ -93,3 +93,42 @@ button{font:inherit;border:0;cursor:pointer;background:none;-webkit-tap-highligh
 .tela.comCenario .centro{z-index:2}
 .tela.comCenario .piso{height:92px}
 .tela.comCenario .pano{background:none}
+
+/* ---------- computador / tela larga: resultado em duas colunas (quadro à esquerda, feedback à direita) ---------- */
+@media (min-width:900px) and (min-aspect-ratio:1/1){
+  body:has(.tela.creme){background:#f7f0de}
+  .tela.creme{max-width:1240px}
+  .tela.creme .header{margin:20px 32px 0;padding:12px 18px}
+  .tela.creme .titulo{font-size:34px}
+  .tela.creme .resCard{width:calc(50% - 48px);margin:auto 0 auto 32px;padding:28px;gap:22px;border-radius:36px}
+  .tela.creme .estrelas svg{width:min(6.4vw,88px)}
+  .tela.creme .resPill{font-size:26px;padding:12px 18px}
+  .tela.creme .cestaFim{width:42%}
+  .tela.creme .resDireita .chip{font-size:21px;padding:3px 14px 3px 4px;gap:7px}
+  .tela.creme .resDireita .chip i{width:30px;height:30px;font-size:18px}
+}
+
+/* ---------- computador / tela larga: início e partida ocupam a tela (cenário largo) ---------- */
+@media (min-width:900px) and (min-aspect-ratio:1/1){
+  .tela.comCenario{max-width:min(1240px,150vh);background-position:center 72%}
+  /* fora da área do jogo, o próprio cenário desfocado (em vez de uma faixa de cor) */
+  body:has(.tela.comCenario){background:transparent}
+  body:has(.tela.comCenario)::before{content:'';position:fixed;inset:-40px;z-index:-1;background:url(./assets/cenario.jpg) center 72%/min(1240px,150vh) auto repeat-x;filter:blur(16px) brightness(.97)}
+  .tela.comCenario .header{padding:16px 24px 6px}
+  .tela.comCenario .titulo{font-size:36px;-webkit-text-stroke:7px #fff}
+  .tela.comCenario .voltar{width:52px;height:52px;font-size:40px}
+  .tela.comCenario .inicioImg{width:min(34vh,320px)}
+  .tela.comCenario .txt{font-size:26px;padding:6px 18px}
+  .tela.comCenario .legenda{font-size:21px;padding:12px 20px;gap:10px}
+  .tela.comCenario .ponto{width:28px;height:28px;font-size:17px}
+  .tela.comCenario .centro .botao{font-size:28px;padding:16px 64px}
+  .tela.comCenario .progresso{width:min(560px,60%);padding:10px 18px;font-size:20px}
+  .tela.comCenario .placar{gap:14px;margin-top:10px}
+  .tela.comCenario .placar .chip{font-size:22px;padding:3px 16px 3px 4px;min-width:84px}
+  .tela.comCenario .placar .chip i{width:32px;height:32px;font-size:19px}
+  .tela.comCenario .piso{height:110px}
+  .tela.comCenario .pano{padding:0 48px}
+  .tela.comCenario .seta{width:120px;height:72px;font-size:42px}
+  .contagem span{font-size:140px}
+  .dica{font-size:22px}
+}

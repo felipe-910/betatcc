@@ -67,3 +67,28 @@ button{font:inherit;border:0;cursor:pointer;background:none;-webkit-tap-highligh
 .tela:not(.creme){background-size:cover;background-position:center bottom;background-repeat:no-repeat}
 .tela:not(.creme) .palco{bottom:27.5%}
 .tela:not(.creme) .carro{bottom:3%}
+
+/* ---------- computador / tela larga: resultado em duas colunas (quadro à esquerda, feedback à direita) ---------- */
+@media (min-width:900px) and (min-aspect-ratio:1/1){
+  body:has(.tela.creme){background:#f7f0de}
+  .tela.creme{max-width:1240px}
+  .tela.creme .header{margin:20px 32px 0;padding:12px 18px}
+  .tela.creme .titulo{font-size:34px}
+  .tela.creme .resCard{width:calc(50% - 48px);margin:auto 0 auto 32px;padding:28px;gap:22px;border-radius:36px}
+  .tela.creme .estrelas svg{width:min(6.4vw,88px)}
+  .tela.creme .resPill{font-size:26px;padding:12px 18px}
+  .tela.creme .luzFim{height:min(24vh,230px)}
+  .tela.creme .resPlacar{font-size:22px}
+}
+
+/* ---------- computador / tela larga: o jogo vira um palco 3:4 alinhado à rua do cenário ---------- */
+/* Com o palco mais largo que o celular, o cenário se ajusta pela largura: a rua começa a 48,9% da largura
+   a partir de baixo (27,5% da altura da imagem 899x1599), e é aí que fica a base do semáforo. */
+@media (min-width:900px) and (min-aspect-ratio:1/1){
+  .tela:not(.creme){max-width:75vh;box-shadow:0 0 0 4px #ffffff8c,0 10px 40px #0003}
+  body:has(.tela:not(.creme)){background:transparent}
+  body:has(.tela:not(.creme))::before{content:'';position:fixed;inset:-40px;z-index:-1;background:url(./assets/cenario.jpg) center bottom/75vh auto repeat-x;filter:blur(16px) brightness(.97)}
+  .tela:not(.creme) .palco{top:118px;bottom:48.9cqw}
+  .tela:not(.creme) .carro{bottom:5.3cqw;width:59cqw;right:-7.6cqw}
+  .tela:not(.creme) .centro{padding-bottom:52cqw}
+}

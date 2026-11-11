@@ -29,3 +29,14 @@
 @media (prefers-reduced-motion: reduce){
   .fb-caixa,.fb-carinha,.fb-overlay.escuro{animation:none !important}
 }
+
+/* ---------- computador / tela larga ---------- */
+@media (min-width:900px) and (min-aspect-ratio:1/1){
+  /* resultado: o quadro com as estrelas fica na coluna da esquerda e o feedback na da direita */
+  .tela.creme .fb-overlay{left:50% !important;top:0 !important;padding:0 32px 30px 16px}
+  /* durante o jogo (Semáforo), o feedback não passa de uma largura confortável */
+  .fb-overlay.escuro .fb-cena{max-width:620px;margin:0 auto}
+  .fb-nome{font-size:21px;top:-24px;padding:4px 20px}
+  .fb-caixa{padding-top:26px}
+  .tela .fb-overlay .fb-cena .fb-botao{font-size:clamp(17px,1.5vw,22px);padding:14px 22px}
+}

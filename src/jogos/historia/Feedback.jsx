@@ -36,20 +36,22 @@ export function FeedbackPersonagem({ narrador, positivo, titulo: tituloOrig, tex
       const caixa = caixaRef.current;
       if (!el || !cena || !caixa) return;
       const W = cena.clientWidth, H = cena.clientHeight, Ht = el.parentElement.clientHeight;
-      const topoCena = cena.getBoundingClientRect().top;
+      const rc = cena.getBoundingClientRect();
+      // só conta o que está em cima da área do feedback (no computador o quadro do resultado fica ao lado, não em cima)
       const minTop = irmaos.reduce((m, n) => {
         const r = n.getBoundingClientRect();
-        return r.height ? Math.max(m, r.bottom - topoCena + 12) : m;
+        return r.height && r.right > rc.left + 8 && r.left < rc.right - 8 ? Math.max(m, r.bottom - rc.top + 12) : m;
       }, 4);
       // carinha: até 40% da largura (o botão precisa caber ao lado) e ~20% da altura da tela
-      const fw = Math.min(0.4 * W, 0.2 * Ht * face.asp, 165);
+      const largo = W > 480;   // computador: a área do feedback é mais larga que qualquer celular
+      const fw = Math.min(0.4 * W, (largo ? 0.27 : 0.2) * Ht * face.asp, largo ? 210 : 165);
       const fh = fw / face.asp;
       // espaço entre a caixa e o topo da imagem da carinha: rabinho + folga, descontando a margem da imagem
       const vao = RABO + FOLGA - face.topo * fh;
       // letra: a maior que couber (entre 10 e 17,5 px)
       const cabe = H - minTop - ETIQUETA - vao - fh;
       const altura = (f) => { caixa.style.setProperty('--fb', `${f}px`); return caixa.offsetHeight; };
-      let f = clamp(Math.min(W * 0.047, Ht * 0.021), 13.5, 17.5);
+      let f = clamp(Math.min(W * 0.047, Ht * (largo ? 0.027 : 0.021)), 13.5, largo ? 24 : 17.5);
       let ch = altura(f);
       while (ch > cabe && f > 10) { f -= 0.25; ch = altura(f); }
       // sobrando espaço, o conjunto fica no meio da área livre (não cola embaixo)
