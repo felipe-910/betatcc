@@ -1,7 +1,9 @@
 import { useEffect, useState } from 'react';
 import { VOZ_LUCA } from './vozLuca.js';
+import { VOZ_ALICE } from './vozAlice.js';
 
-// Voz do Luca (a Alice não tem áudio: o texto dela continua aparecendo letra por letra).
+// Vozes gravadas: o Luca narra a história e os feedbacks; a Alice, por enquanto, só os feedbacks
+// (na história, o texto dela continua aparecendo letra por letra).
 // Um único elemento <audio> para o jogo todo: o iPhone/iPad só deixa tocar som depois de um toque,
 // e um elemento "destravado" num toque continua liberado depois (inclusive para o feedback no fim da partida).
 const SILENCIO = 'data:audio/wav;base64,UklGRkQAAABXQVZFZm10IBAAAAABAAEAQB8AAIA+AAACABAAZGF0YSAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==';
@@ -15,7 +17,7 @@ const audio = () => {
   return elemento;
 };
 
-// Chamar DENTRO de um clique (ex.: no cartão do Luca).
+// Chamar DENTRO de um clique (ex.: no cartão do narrador).
 export function destravarVoz() {
   const a = audio();
   if (!a || destravado) return;
@@ -28,7 +30,8 @@ export function destravarVoz() {
 // Fala da história: VOZ_LUCA.historia[jogo][indice] -> { src, marcas, fala } (ou null)
 export const vozDaHistoria = (jogo, indice) => VOZ_LUCA.historia[jogo]?.[indice] ?? null;
 // Feedback: procurado pelo próprio texto (título + texto), assim não depende de como cada jogo sorteia.
-export const vozDoFeedback = (titulo, texto) => VOZ_LUCA.feedback[`${titulo}\n${texto}`] ?? null;
+const VOZES = { alice: VOZ_ALICE, luca: VOZ_LUCA };
+export const vozDoFeedback = (narrador, titulo, texto) => VOZES[narrador]?.feedback[`${titulo}\n${texto}`] ?? null;
 
 // Quantas letras já foram ditas no instante t.
 // marcas: [inicioLetra, fimLetra, inicioSeg, fimSeg] de cada palavra, na ordem do texto.

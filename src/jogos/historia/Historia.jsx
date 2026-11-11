@@ -46,7 +46,7 @@ function Escolha({ titulo, imagem, fundo, onEscolher, onSair }) {
           {['alice', 'luca'].map((id) => {
             const n = NARRADORES[id];
             return (
-              <button key={id} className="hs-cartao" style={{ background: n.cor, borderColor: n.borda }} onClick={() => { if (id === 'luca') destravarVoz(); onEscolher(id); }}>
+              <button key={id} className="hs-cartao" style={{ background: n.cor, borderColor: n.borda }} onClick={() => { destravarVoz(); onEscolher(id); }}>
                 <img className="hs-cartao-avatar" src={n.avatar} alt="" draggable={false} />
                 <span className="hs-cartao-nome">{n.nome}</span>
               </button>

@@ -1,10 +1,9 @@
-import { useState, useEffect, useLayoutEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import './App.css';
 import { AvisaFim, voltarParaHistorias } from '../avisarPai.jsx';
 import Historia from '../historia/Historia.jsx';
-import { ALICE_FEEDBACK } from '../historia/personagens.js';
+import { FeedbackPersonagem } from '../historia/Feedback.jsx';
 import { SECOES, POSICOES, TAM_ITEM } from './geometria';
-import { vozDoFeedback, useVozSincronizada, TextoRevelado } from '../historia/voz.jsx';
 import prato from './assets/prato.png';
 import brocolis from './assets/brocolis.png';
 import cenoura from './assets/cenoura.png';
@@ -29,11 +28,6 @@ import zonaEsq from './assets/zona-esq.png';
 import zonaDirTop from './assets/zona-dirTop.png';
 import zonaDirBot from './assets/zona-dirBot.png';
 import xadrez from './assets/xadrez.jpg';
-import personagem from './assets/personagem.png';
-import balao from './assets/balao.png';
-
-const PERSONAGEM = personagem;
-const BALAO = balao;
 
 /* ---------- Dados do jogo ---------- */
 // grupo: a que parte do prato o alimento pertence. bom: false = alimento processado (sem exagerar)
@@ -217,116 +211,6 @@ function PratoMontado({ escolhas, ativa, zonaRefs, onPegar, className = '' }) {
   );
 }
 
-/* ---------- Feedback com personagem e balão (igual ao Semáforo Saudável) ---------- */
-// Balão horizontal (sem rotação). A ponta fica no canto inferior esquerdo da imagem e é ancorada
-// ao lado da boca do personagem; o corpo do balão fica à direita e um pouco acima da cabeça.
-// Medidas do PNG em unidades da largura do balão (bw).
-const GEO = {
-  asp: 800 / 496,          // largura / altura da imagem
-  tipX: 0.025, tipY: 0.998, // posição da ponta dentro da imagem (fração)
-  tcx: 0.5, tcy: 0.30,      // centro do oval (em bw, a partir do canto superior esquerdo da imagem)
-  tw: 0.72, th: 0.38,       // área de texto que cabe dentro do oval (em bw)
-};
-// proporção do personagem e ponto da boca (fração da largura / altura do sprite)
-const SPRITE = { asp: 210 / 720, tipX: 0.92, tipY: 0.165 };
-
-function calcLayout(Wc, Ht, Ho, padB, SPRITE) {
-  const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
-  const PAD = 8;
-  const ph = clamp(0.31 * Ht, 190, 330);             // altura do personagem (um pouco menor: o balão ganha largura para o feedback caber inteiro)
-  const cw = ph * SPRITE.asp;                         // largura do personagem
-  const charLeft = clamp(0.03 * Wc, 8, 0.2 * Wc);     // personagem no canto inferior esquerdo
-  const tx = cw * SPRITE.tipX, ty = ph * SPRITE.tipY; // boca (relativa ao personagem)
-  const tipXAbs = charLeft + tx;
-  const tipYAbs = Ho - padB - ph + ty;                // altura da boca dentro do overlay
-  const bwH = (Wc - PAD - tipXAbs) / (1 - GEO.tipX);  // cabe à direita
-  const bwV = ((tipYAbs - PAD) * GEO.asp) / GEO.tipY; // cabe acima
-  const bw = Math.max(170, Math.min(clamp(1.3 * ph, 230, 360), bwH, bwV));
-  return { ph, cw, bw, charLeft, tipX: tipXAbs, tipY: ty };
-}
-
-function FeedbackPersonagem({ titulo: tituloOrig, texto: textoOrig, botao, onBotao, escurecer, pula, topo, narrador }) {
-  // quem contou a história é quem dá o feedback: Alice (png de corpo inteiro) ou Luca (personagem.png do jogo)
-  const { img: imgPersonagem, sprite } = narrador === 'alice' ? ALICE_FEEDBACK : { img: PERSONAGEM, sprite: SPRITE };
-  // Luca: a voz gravada lê o feedback e o texto vai aparecendo junto (o balão já nasce do tamanho final).
-  const voz = narrador === 'luca' ? vozDoFeedback(tituloOrig, textoOrig) : null;
-  // com a voz do Luca, o balão mostra o texto exatamente como ele fala
-  const [titulo, texto] = voz ? voz.texto.split('\n') : [tituloOrig, textoOrig];
-  const sinc = useVozSincronizada(voz, titulo.length + 1 + texto.length, 350);
-  const dito = voz && !sinc.falhou && !sinc.fim ? sinc.n : Infinity;
-  const overlayRef = useRef(null);
-  const cenaRef = useRef(null);
-  const textoRef = useRef(null);
-  const mioloRef = useRef(null);
-  const [L, setL] = useState(null);
-
-  useLayoutEffect(() => {
-    const el = overlayRef.current;
-    const medir = () => {
-      const cena = cenaRef.current;
-      if (!el || !cena) return;
-      setL(calcLayout(cena.clientWidth, el.parentElement.clientHeight, el.clientHeight, 0.03 * el.clientWidth, sprite));
-    };
-    medir();
-    const ro = new ResizeObserver(medir);
-    ro.observe(el);
-    return () => ro.disconnect();
-  }, [sprite]);
-
-  // O feedback aparece inteiro, de uma vez, no balão: a letra é reduzida só o necessário para o texto caber.
-  useLayoutEffect(() => {
-    const caixa = textoRef.current;
-    const miolo = mioloRef.current;
-    if (!L || !caixa || !miolo) return;
-    let f = L.bw * 0.05;
-    const minimo = 8.5;
-    caixa.style.setProperty('--fb', `${f}px`);
-    while (miolo.offsetHeight > caixa.clientHeight && f > minimo) {
-      f -= 0.25;
-      caixa.style.setProperty('--fb', `${f}px`);
-    }
-  }, [L, titulo, texto]);
-
-  const bx = L ? L.tipX - GEO.tipX * L.bw : 0;                 // canto esquerdo do balão
-  const by = L ? L.tipY - (GEO.tipY * L.bw) / GEO.asp : 0;      // canto superior do balão
-
-  return (
-    <div ref={overlayRef} className={`fbOverlay ${escurecer ? 'escuro' : 'claro'}`} style={topo ? { top: topo } : undefined}>
-      <div ref={cenaRef} className="fbCena" style={{ height: L ? L.ph : 200, visibility: L ? 'visible' : 'hidden' }}>
-        {L && (
-          <>
-            <div className="balao" style={{ transformOrigin: `${L.tipX}px ${L.tipY}px` }}>
-              <img className="balaoImg" src={BALAO} alt="" style={{ width: L.bw, left: bx, top: by }} />
-              <div
-                ref={textoRef}
-                className="balaoTexto"
-                style={{
-                  width: GEO.tw * L.bw,
-                  height: GEO.th * L.bw,
-                  left: bx + (GEO.tcx - GEO.tw / 2) * L.bw,
-                  top: by + (GEO.tcy - GEO.th / 2) * L.bw,
-                }}
-              >
-                <div ref={mioloRef}>
-                  <div className="fbTitulo"><TextoRevelado texto={titulo} n={dito} /></div>
-                  <div className="fbTxt"><TextoRevelado texto={texto} n={dito - titulo.length - 1} /></div>
-                </div>
-              </div>
-            </div>
-            <img
-              className={`personagem ${pula ? 'pula' : ''}`}
-              src={imgPersonagem}
-              alt="Personagem"
-              style={{ left: L.charLeft, height: L.ph }}
-            />
-            <button className="botao pequeno botaoFb" onClick={onBotao}>{botao}</button>
-          </>
-        )}
-      </div>
-    </div>
-  );
-}
-
 /* ---------- Jogo ---------- */
 function Jogo({ onSair, narrador }) {
   const [etapa, setEtapa] = useState(0);                       // 0, 1, 2
@@ -456,6 +340,7 @@ function Jogo({ onSair, narrador }) {
         <AvisaFim jogo="prato" estrelas={estrelas} resumo={resumo} narrador={narrador} detalhes={detalhes} />
         <FeedbackPersonagem
           narrador={narrador}
+          positivo={estrelas >= 2}
           titulo={titulo}
           texto={texto}
           botao={<><Recarregar />Jogar novamente</>}

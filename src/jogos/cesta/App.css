@@ -71,21 +71,6 @@ button{font:inherit;border:0;cursor:pointer;background:none;-webkit-tap-highligh
 .seta:active{transform:translateY(3px);border-bottom-width:2px}
 .piso.deco{position:absolute;left:0;right:0;bottom:0;height:19%;min-height:96px;z-index:1}
 
-/* ---------- personagem + balão de feedback (posições calculadas em JS a partir do personagem) ---------- */
-.fbOverlay{position:absolute;left:0;right:0;bottom:0;z-index:20;display:flex;align-items:flex-end;padding:0 12px 3%}
-.fbOverlay.claro{top:22%}
-.fbCena{position:relative;width:100%}
-.personagem{position:absolute;bottom:0;width:auto;z-index:2;transform-origin:bottom center;animation:respira 2.4s ease-in-out infinite}
-.personagem.pula{animation:pula .7s ease-out 2}
-@keyframes respira{0%,100%{transform:scaleY(1)}50%{transform:scaleY(1.012)}}
-@keyframes pula{0%,100%{transform:translateY(0)}40%{transform:translateY(-22px)}}
-.balao{position:absolute;inset:0;z-index:3;pointer-events:none;animation:pop .3s ease-out}
-.balaoImg{position:absolute;max-width:none;height:auto}
-.balaoTexto{position:absolute;display:flex;flex-direction:column;justify-content:center;text-align:center;color:#000;--fb:12px}
-.fbTitulo,.fbTxt{text-transform:uppercase;letter-spacing:.15px}
-.balao .fbTitulo{font-size:calc(var(--fb) * 1.2);font-weight:900;line-height:1.05;color:#000}
-.balao .fbTxt{font-size:var(--fb);font-weight:700;line-height:1.12;margin-top:2px;color:#000}
-.botaoFb{position:absolute;right:0;bottom:6px;width:44%;z-index:4;white-space:nowrap}
 
 /* ---------- tela de resultado (tema creme, igual ao Monte seu prato e ao Semáforo Saudável) ---------- */
 .tela.creme{background:#f7f0de}
@@ -101,7 +86,7 @@ button{font:inherit;border:0;cursor:pointer;background:none;-webkit-tap-highligh
 .resDireita .placar{margin-top:0;flex-wrap:wrap;gap:5px}
 .resDireita .chip{box-shadow:0 2px 0 #0000001a;border:2px solid #e6e0cc;padding:1px 7px 1px 2px;gap:4px;font-size:15px;min-width:0}
 .resDireita .chip i{width:20px;height:20px;font-size:13px}
-.tela.creme .botaoFb{width:auto;right:12px;bottom:14px;display:inline-flex;align-items:center;gap:10px;background:#6e9e77;border:0;border-radius:32px;padding:12px 26px;font-size:19px;font-weight:900;color:#fff;box-shadow:0 4px 0 #0002}
+.tela.creme .botaoFb{display:inline-flex;align-items:center;gap:10px;background:#6e9e77;border:0;border-radius:32px;padding:12px 26px;font-size:19px;font-weight:900;color:#fff;box-shadow:0 4px 0 #0002}
 
 /* cenário do jogo (imagem no fundo da tela; o chão e a árvore antigos saíram) */
 .tela.comCenario{background-size:cover;background-position:center bottom;background-repeat:no-repeat}

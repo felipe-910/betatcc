@@ -27,10 +27,8 @@ import agriao from './assets/agriao.png';
 import couve from './assets/couve.png';
 import cesta from './assets/cesta.png';
 import cenario from './assets/cenario.jpg';
-import personagem from './assets/personagem.png';
-import balao from './assets/balao.png';
 
 export const IMAGENS = { maca, laranja, banana, cenoura, pao, queijo, salsicha, bombom, refri, abobora, batata, brocolis, carne, frango, macarrao, milho, nuggets, ovo, tomate, melancia, abacaxi, uva, chuchu, beterraba, alface, agriao, couve };
 // proporção (largura / altura) de cada sprite, para os alimentos finos ou largos não ficarem pequenos demais
 export const PROPORCAO = { maca: 0.82, laranja: 0.895, banana: 1.133, cenoura: 1.185, pao: 1.237, queijo: 0.941, salsicha: 2.151, bombom: 1.053, refri: 0.566, abobora: 0.996, batata: 0.945, brocolis: 0.93, carne: 1.488, frango: 1.231, macarrao: 2.51, milho: 1.036, nuggets: 1.024, ovo: 1.829, tomate: 0.918, melancia: 1.855, abacaxi: 0.488, uva: 0.773, chuchu: 0.621, beterraba: 1.249, alface: 1.213, agriao: 0.551, couve: 1.113 };
-export { cesta as CESTA, cenario as CENARIO, personagem as PERSONAGEM, balao as BALAO };
+export { cesta as CESTA, cenario as CENARIO };
