@@ -6,12 +6,13 @@ import { vozDoFeedback, useVozSincronizada, TextoRevelado } from './voz.jsx';
 /* ---------- Feedback com a carinha do narrador (o mesmo nos 3 minijogos) ----------
    Mesmo visual da caixa de diálogo da história: caixa branca com borda verde, etiqueta com o nome
    de quem fala e o texto em letra bastão. Embaixo, à esquerda, fica a carinha (feliz quando positivo,
-   tonta quando negativo) e um rabinho curto sai da caixa apontando para a cabeça. O botão fica ao
-   lado da carinha. A letra é a maior que couber no espaço livre da tela. */
+   tonta quando negativo); o rabinho sai da caixa alinhado com a boca e para um pouco acima da cabeça,
+   sem encostar. O botão fica ao lado da carinha. A letra é a maior que couber no espaço livre da tela. */
 
 const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
 const ETIQUETA = 20;   // quanto a etiqueta do nome sobe acima da caixa
-const VAO = 4;         // espaço entre a caixa e o alto da carinha
+const RABO = 16;       // comprimento do rabinho, abaixo da caixa
+const FOLGA = 9;       // espaço entre a ponta do rabinho e o alto da cabeça
 
 export function FeedbackPersonagem({ narrador, positivo, titulo: tituloOrig, texto: textoOrig, botao, onBotao, escurecer, pula, topo }) {
   const quem = NARRADORES[narrador] ?? NARRADORES.alice;
@@ -43,8 +44,10 @@ export function FeedbackPersonagem({ narrador, positivo, titulo: tituloOrig, tex
       // carinha: até 40% da largura (o botão precisa caber ao lado) e ~20% da altura da tela
       const fw = Math.min(0.4 * W, 0.2 * Ht * face.asp, 165);
       const fh = fw / face.asp;
-      // letra: a maior que couber (entre 10 e 17 px)
-      const cabe = H - minTop - ETIQUETA - VAO - fh;
+      // espaço entre a caixa e o topo da imagem da carinha: rabinho + folga, descontando a margem da imagem
+      const vao = RABO + FOLGA - face.topo * fh;
+      // letra: a maior que couber (entre 10 e 17,5 px)
+      const cabe = H - minTop - ETIQUETA - vao - fh;
       const altura = (f) => { caixa.style.setProperty('--fb', `${f}px`); return caixa.offsetHeight; };
       let f = clamp(Math.min(W * 0.047, Ht * 0.021), 13.5, 17.5);
       let ch = altura(f);
@@ -53,13 +56,13 @@ export function FeedbackPersonagem({ narrador, positivo, titulo: tituloOrig, tex
       const sobra = cabe - ch;
       const levantar = escurecer ? 0 : clamp(sobra * 0.5, 0, 0.12 * Ht);
       const faceTop = H - levantar - fh;
-      const caixaTop = faceTop - VAO - ch;
-      // rabinho: sai da borda de baixo da caixa e aponta para o alto da cabeça (a ponta fica atrás dela)
-      // coordenadas do desenho do rabinho: x a partir da borda esquerda da caixa; y a partir do topo da borda de baixo (3 px)
-      const alvoX = face.alvo[0] * fw, alvoY = face.alvo[1] * fh + VAO + 3;
-      const base = clamp(0.075 * W, 22, 30);
-      const b1 = alvoX + 0.35 * base, b2 = b1 + base;
-      setL({ fw, fh, f, faceTop, caixaTop, levantar, rabo: { b1, b2, tx: alvoX, ty: alvoY } });
+      const caixaTop = faceTop - vao - ch;
+      // rabinho: a ponta fica exatamente acima da boca, afastada da cabeça (FOLGA); a base inclina só um pouco
+      // coordenadas do desenho: x a partir da borda esquerda da caixa; y a partir do topo da borda de baixo (3 px)
+      const tx = face.bocaX * fw, ty = RABO + 3;
+      const base = clamp(0.07 * W, 22, 28);
+      const b1 = tx - 0.2 * base, b2 = b1 + base;
+      setL({ fw, fh, f, faceTop, caixaTop, levantar, rabo: { b1, b2, tx, ty } });
     };
     medir();
     const ro = new ResizeObserver(medir);
