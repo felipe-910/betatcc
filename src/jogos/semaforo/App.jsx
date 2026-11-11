@@ -196,7 +196,6 @@ function Jogo({ onSair, narrador }) {
           texto={texto}
           botao={<><Recarregar />Jogar novamente</>}
           onBotao={reiniciar}
-          pula={perfeito}
           topo="38%"
         />
       </Tela>
@@ -223,7 +222,6 @@ function Jogo({ onSair, narrador }) {
           narrador={narrador}
           positivo={acertou}
           escurecer
-          pula={acertou}
           titulo={acertou ? 'Muito bem!' : 'Quase!'}
           texto={`${alimento.nome} fica no ${alimento.cor}. ${DESC[alimento.cor]}`}
           botao={ultima ? 'Resultado ➜' : 'Próximo ➜'}

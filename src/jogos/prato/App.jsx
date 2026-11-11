@@ -345,7 +345,6 @@ function Jogo({ onSair, narrador }) {
           texto={texto}
           botao={<><Recarregar />Jogar novamente</>}
           onBotao={reiniciar}
-          pula={perfeito}
           topo="36%"
         />
       </Tela>

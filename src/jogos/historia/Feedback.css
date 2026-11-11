@@ -15,12 +15,9 @@
 /* rabinho: sai da borda de baixo e aponta para o alto da cabeça (a ponta fica atrás da carinha) */
 .fb-rabo{position:absolute;left:-3px;top:100%;overflow:visible;pointer-events:none}
 
-/* carinha: entra com um pulinho; feliz "respira", tonta balança, e no resultado perfeito pula */
+/* carinha: só aparece com um pulinho de entrada (sem balançar) */
 .fb-carinha{position:absolute;left:0;z-index:3;animation:fb-entra .4s cubic-bezier(.3,1.5,.6,1) both}
-.fb-carinha img{display:block;width:100%;height:100%;object-fit:contain;transform-origin:50% 90%;filter:drop-shadow(0 4px 3px #00000026);user-select:none;-webkit-user-drag:none}
-.fb-carinha img.feliz{animation:fb-respira 2.4s ease-in-out infinite}
-.fb-carinha img.pula{animation:fb-pula .7s ease-out 2,fb-respira 2.4s ease-in-out 1.4s infinite}
-.fb-carinha img.tonta{animation:fb-tonta 2.6s ease-in-out infinite}
+.fb-carinha img{display:block;width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 4px 3px #00000026);user-select:none;-webkit-user-drag:none}
 
 /* botão ao lado da carinha (left/bottom vêm do cálculo; centralizado na altura em que está) */
 .tela .fb-overlay .fb-cena .fb-botao{position:absolute;right:0;width:auto;z-index:5;transform:translateY(50%);display:inline-flex;align-items:center;justify-content:center;gap:8px;white-space:nowrap;font-size:clamp(14px,4.4cqw,19px);padding-left:10px;padding-right:10px}
@@ -29,9 +26,6 @@
 @keyframes fb-fade{from{opacity:0}to{opacity:1}}
 @keyframes fb-pop{from{transform:scale(.85) translateY(10px);opacity:0}to{transform:none;opacity:1}}
 @keyframes fb-entra{from{transform:translateY(18px) scale(.7);opacity:0}to{transform:none;opacity:1}}
-@keyframes fb-respira{0%,100%{transform:scale(1)}50%{transform:scale(1.03)}}
-@keyframes fb-pula{0%,100%{transform:translateY(0)}40%{transform:translateY(-7px)}}
-@keyframes fb-tonta{0%,100%{transform:rotate(-4deg)}50%{transform:rotate(4deg)}}
 @media (prefers-reduced-motion: reduce){
-  .fb-caixa,.fb-carinha,.fb-carinha img,.fb-overlay.escuro{animation:none !important}
+  .fb-caixa,.fb-carinha,.fb-overlay.escuro{animation:none !important}
 }

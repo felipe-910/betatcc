@@ -6,7 +6,7 @@ import { vozDoFeedback, useVozSincronizada, TextoRevelado } from './voz.jsx';
 /* ---------- Feedback com a carinha do narrador (o mesmo nos 3 minijogos) ----------
    Mesmo visual da caixa de diálogo da história: caixa branca com borda verde, etiqueta com o nome
    de quem fala e o texto em letra bastão. Embaixo, à esquerda, fica a carinha (feliz quando positivo,
-   tonta quando negativo); o rabinho sai da caixa alinhado com a boca e para um pouco acima da cabeça,
+   tonta quando negativo), parada; o rabinho sai da caixa alinhado com a boca e para um pouco acima da cabeça,
    sem encostar. O botão fica ao lado da carinha. A letra é a maior que couber no espaço livre da tela. */
 
 const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
@@ -14,7 +14,7 @@ const ETIQUETA = 20;   // quanto a etiqueta do nome sobe acima da caixa
 const RABO = 16;       // comprimento do rabinho, abaixo da caixa
 const FOLGA = 9;       // espaço entre a ponta do rabinho e o alto da cabeça
 
-export function FeedbackPersonagem({ narrador, positivo, titulo: tituloOrig, texto: textoOrig, botao, onBotao, escurecer, pula, topo }) {
+export function FeedbackPersonagem({ narrador, positivo, titulo: tituloOrig, texto: textoOrig, botao, onBotao, escurecer, topo }) {
   const quem = NARRADORES[narrador] ?? NARRADORES.alice;
   const face = (CARINHAS[narrador] ?? CARINHAS.alice)[positivo ? 'feliz' : 'triste'];
   // a voz gravada (Alice ou Luca) lê o feedback e o texto vai aparecendo junto (a caixa já nasce do tamanho final)
@@ -70,7 +70,6 @@ export function FeedbackPersonagem({ narrador, positivo, titulo: tituloOrig, tex
     return () => ro.disconnect();
   }, [face, escurecer, titulo, texto]);
 
-  const animacao = !positivo ? 'tonta' : pula ? 'pula' : 'feliz';
   const R = L?.rabo;
 
   return (
@@ -95,7 +94,7 @@ export function FeedbackPersonagem({ narrador, positivo, titulo: tituloOrig, tex
         {L && (
           <>
             <div className="fb-carinha" style={{ top: L.faceTop, width: L.fw, height: L.fh }}>
-              <img key={face.img} className={animacao} src={face.img} alt={positivo ? 'Personagem feliz' : 'Personagem tonto'} draggable={false} />
+              <img key={face.img} src={face.img} alt={positivo ? 'Personagem feliz' : 'Personagem tonto'} draggable={false} />
             </div>
             <button
               className="botao pequeno botaoFb fb-botao"

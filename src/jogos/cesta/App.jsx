@@ -358,7 +358,6 @@ export function Resultado({ r, onJogar, onSair, semente0, narrador }) {
         texto={texto}
         botao={<><Recarregar />Jogar novamente</>}
         onBotao={onJogar}
-        pula={grupo === 'totalmentePositivo'}
         topo="38%"
       />
     </Tela>
