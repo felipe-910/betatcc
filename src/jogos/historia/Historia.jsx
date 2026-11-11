@@ -63,8 +63,8 @@ const VELOCIDADE = 24; // ms por letra
 const reduzMovimento = () => typeof window !== 'undefined' && window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 function CaixaFala({ narrador, texto, voz, reserva, indice, total, onFalando, onProxima }) {
-  // Luca: o texto acompanha a voz gravada (cada palavra aparece quando é dita).
-  // Alice (ou se o áudio não tocar): o texto aparece letra por letra, como antes.
+  // Com a voz gravada (Alice ou Luca), o texto acompanha a fala (cada palavra aparece quando é dita).
+  // Se o áudio não tocar, o texto aparece letra por letra, como antes.
   const sinc = useVozSincronizada(voz, texto.length);
   const comVoz = !!voz && !sinc.falhou;
   const [n, setN] = useState(() => (reduzMovimento() ? texto.length : 0));
@@ -112,8 +112,8 @@ function CaixaFala({ narrador, texto, voz, reserva, indice, total, onFalando, on
 }
 
 function Historia2({ jogo, titulo, narrador, onFim, onVoltar }) {
-  // o Luca mostra o texto exatamente como ele fala na gravação; a Alice usa o texto original
-  const falas = narrador.id === 'luca' ? FALAS[jogo].map((f, k) => vozDaHistoria(jogo, k)?.texto ?? f) : FALAS[jogo];
+  // cada narrador mostra o texto exatamente como fala na gravação (a Alice lê o texto original)
+  const falas = FALAS[jogo].map((f, k) => vozDaHistoria(narrador.id, jogo, k)?.texto ?? f);
   const reserva = falas.reduce((a, b) => (b.length > a.length ? b : a), '');
   const [i, setI] = useState(0);
   const [falando, setFalando] = useState(false);
@@ -160,7 +160,7 @@ function Historia2({ jogo, titulo, narrador, onFim, onVoltar }) {
           </div>
         </div>
       ) : (
-      <CaixaFala key={i} narrador={narrador} texto={falas[i]} voz={narrador.id === 'luca' ? vozDaHistoria(jogo, i) : null} reserva={reserva} indice={i} total={falas.length} onFalando={setFalando} onProxima={proxima} />
+      <CaixaFala key={i} narrador={narrador} texto={falas[i]} voz={vozDaHistoria(narrador.id, jogo, i)} reserva={reserva} indice={i} total={falas.length} onFalando={setFalando} onProxima={proxima} />
       )}
     </Tela>
   );
