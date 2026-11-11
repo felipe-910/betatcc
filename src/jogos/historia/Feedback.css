@@ -1,22 +1,23 @@
-/* Feedback com a carinha do narrador e o balão de fala (o mesmo nos 3 minijogos).
+/* Feedback com a carinha do narrador (o mesmo nos 3 minijogos), no visual da caixa de diálogo da história.
    Posições e tamanhos são calculados em Feedback.jsx a partir do espaço disponível. */
 .fb-overlay{position:absolute;left:0;right:0;bottom:0;top:22%;z-index:20;padding:0 12px max(12px,2.5%)}
 .fb-overlay.escuro{top:0;padding-top:12px;background:rgba(20,40,50,.38);animation:fb-fade .25s ease-out}
 .fb-cena{position:relative;width:100%;height:100%}
 
-/* balão: oval branco com contorno escuro; o rabinho passa por cima do lado direito da cabeça até a boca */
-.fb-balao{position:absolute;z-index:4;pointer-events:none;animation:fb-pop .32s ease-out both}
-.fb-balao-forma{display:block;overflow:visible;filter:drop-shadow(0 3px 0 #0000001f)}
-.fb-texto{position:absolute;display:flex;flex-direction:column;justify-content:center;text-align:center;color:#000;--fb:12px}
-.fb-medidor{left:0;top:0;height:auto;display:block;visibility:hidden;pointer-events:none}
-.fb-titulo,.fb-txt{text-transform:uppercase;letter-spacing:.15px;color:#000}
-.fb-titulo{font-size:calc(var(--fb) * 1.2);font-weight:900;line-height:1.08}
-.fb-txt{font-size:var(--fb);font-weight:700;line-height:1.16;margin-top:3px}
+/* caixa de fala: igual à da história (branca, borda verde, etiqueta com o nome) */
+.fb-caixa{position:absolute;left:0;right:0;z-index:2;padding:22px 16px 13px;background:#fff;border:3px solid #6aaa7e;border-radius:22px;
+  filter:drop-shadow(0 4px 0 rgba(0,0,0,.13));text-align:left;color:#2d3a3a;--fb:15px;animation:fb-pop .3s ease-out both}
+.fb-nome{position:absolute;left:12px;top:-20px;min-width:86px;text-align:center;padding:3px 16px;border:3px solid;border-radius:12px;
+  color:#fff;font-size:17px;font-weight:900;line-height:1.2;text-shadow:0 2px 0 #0003;box-shadow:0 3px 0 #0002}
+.fb-titulo,.fb-txt{text-transform:uppercase;letter-spacing:.2px}
+.fb-titulo{font-size:calc(var(--fb) * 1.15);font-weight:900;line-height:1.15;color:#2f6b45}
+.fb-txt{font-size:var(--fb);font-weight:800;line-height:1.3;margin-top:4px;color:#2d3a3a}
+/* rabinho: sai da borda de baixo e aponta para o alto da cabeça (a ponta fica atrás da carinha) */
+.fb-rabo{position:absolute;left:-3px;top:100%;overflow:visible;pointer-events:none}
 
-/* carinha: entra com um pulinho; feliz "respira", tonta balança, e no resultado perfeito pula.
-   O giro/escala é em volta da boca (transform-origin vem do cálculo), assim a ponta do balão não se solta. */
+/* carinha: entra com um pulinho; feliz "respira", tonta balança, e no resultado perfeito pula */
 .fb-carinha{position:absolute;left:0;z-index:3;animation:fb-entra .4s cubic-bezier(.3,1.5,.6,1) both}
-.fb-carinha img{display:block;width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 4px 3px #00000026);user-select:none;-webkit-user-drag:none}
+.fb-carinha img{display:block;width:100%;height:100%;object-fit:contain;transform-origin:50% 90%;filter:drop-shadow(0 4px 3px #00000026);user-select:none;-webkit-user-drag:none}
 .fb-carinha img.feliz{animation:fb-respira 2.4s ease-in-out infinite}
 .fb-carinha img.pula{animation:fb-pula .7s ease-out 2,fb-respira 2.4s ease-in-out 1.4s infinite}
 .fb-carinha img.tonta{animation:fb-tonta 2.6s ease-in-out infinite}
@@ -26,11 +27,11 @@
 .fb-botao svg{flex:none}
 
 @keyframes fb-fade{from{opacity:0}to{opacity:1}}
-@keyframes fb-pop{from{transform:scale(.6);opacity:0}to{transform:scale(1);opacity:1}}
+@keyframes fb-pop{from{transform:scale(.85) translateY(10px);opacity:0}to{transform:none;opacity:1}}
 @keyframes fb-entra{from{transform:translateY(18px) scale(.7);opacity:0}to{transform:none;opacity:1}}
-@keyframes fb-respira{0%,100%{transform:scale(1)}50%{transform:scale(1.025)}}
-@keyframes fb-pula{0%,100%{transform:translateY(0)}40%{transform:translateY(-12px)}}
-@keyframes fb-tonta{0%,100%{transform:rotate(-3.5deg)}50%{transform:rotate(3.5deg)}}
+@keyframes fb-respira{0%,100%{transform:scale(1)}50%{transform:scale(1.03)}}
+@keyframes fb-pula{0%,100%{transform:translateY(0)}40%{transform:translateY(-14px)}}
+@keyframes fb-tonta{0%,100%{transform:rotate(-4deg)}50%{transform:rotate(4deg)}}
 @media (prefers-reduced-motion: reduce){
-  .fb-balao,.fb-carinha,.fb-carinha img,.fb-overlay.escuro{animation:none !important}
+  .fb-caixa,.fb-carinha,.fb-carinha img,.fb-overlay.escuro{animation:none !important}
 }

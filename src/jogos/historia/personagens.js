@@ -17,17 +17,11 @@ export const NARRADORES = {
 
 // Carinhas do feedback: feliz (2 e 3 estrelas, ou acertou) e tonta (1 estrela, ou errou).
 // As duas olham para a direita, para o lado do balão.
-// asp = largura / altura da imagem; boca = onde encosta a ponta do balão (fração da largura / altura da imagem);
-// joelho = por onde o "rabinho" do balão desce, do lado direito do rosto, sem cobrir os olhos.
-const ALICE = { asp: 444 / 460, joelho: [0.97, 0.74] };
-const LUCA = { asp: 489 / 460, joelho: [0.99, 0.8] };
+// asp = largura / altura da imagem; alvo = ponto no alto da cabeça para onde aponta o rabinho do balão
+// (fração da largura / altura da imagem; a ponta fica escondida atrás do chapéu / cabelo).
+const ALICE = { asp: 444 / 460, alvo: [0.56, 0.14] };
+const LUCA = { asp: 489 / 460, alvo: [0.58, 0.16] };
 export const CARINHAS = {
-  alice: {
-    feliz: { img: aliceFeliz, ...ALICE, boca: [0.7, 0.665] },
-    triste: { img: aliceTriste, ...ALICE, boca: [0.75, 0.64] },
-  },
-  luca: {
-    feliz: { img: lucaFeliz, ...LUCA, boca: [0.67, 0.75] },
-    triste: { img: lucaTriste, ...LUCA, boca: [0.67, 0.74] },
-  },
+  alice: { feliz: { img: aliceFeliz, ...ALICE }, triste: { img: aliceTriste, ...ALICE } },
+  luca: { feliz: { img: lucaFeliz, ...LUCA }, triste: { img: lucaTriste, ...LUCA } },
 };
