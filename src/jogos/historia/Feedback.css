@@ -4,8 +4,8 @@
 .fb-overlay.escuro{top:0;padding-top:12px;background:rgba(20,40,50,.38);animation:fb-fade .25s ease-out}
 .fb-cena{position:relative;width:100%;height:100%}
 
-/* balão: oval branco com contorno escuro e a ponta encostando no alto da cabeça */
-.fb-balao{position:absolute;left:0;z-index:2;pointer-events:none;animation:fb-pop .32s ease-out both}
+/* balão: oval branco com contorno escuro; o rabinho passa por cima do lado direito da cabeça até a boca */
+.fb-balao{position:absolute;z-index:4;pointer-events:none;animation:fb-pop .32s ease-out both}
 .fb-balao-forma{display:block;overflow:visible;filter:drop-shadow(0 3px 0 #0000001f)}
 .fb-texto{position:absolute;display:flex;flex-direction:column;justify-content:center;text-align:center;color:#000;--fb:12px}
 .fb-medidor{left:0;top:0;height:auto;display:block;visibility:hidden;pointer-events:none}
@@ -13,23 +13,24 @@
 .fb-titulo{font-size:calc(var(--fb) * 1.2);font-weight:900;line-height:1.08}
 .fb-txt{font-size:var(--fb);font-weight:700;line-height:1.16;margin-top:3px}
 
-/* carinha: entra com um pulinho; feliz "respira", tonta balança, e no resultado perfeito pula */
+/* carinha: entra com um pulinho; feliz "respira", tonta balança, e no resultado perfeito pula.
+   O giro/escala é em volta da boca (transform-origin vem do cálculo), assim a ponta do balão não se solta. */
 .fb-carinha{position:absolute;left:0;z-index:3;animation:fb-entra .4s cubic-bezier(.3,1.5,.6,1) both}
-.fb-carinha img{display:block;width:100%;height:100%;object-fit:contain;transform-origin:50% 85%;filter:drop-shadow(0 4px 3px #00000026);user-select:none;-webkit-user-drag:none}
+.fb-carinha img{display:block;width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 4px 3px #00000026);user-select:none;-webkit-user-drag:none}
 .fb-carinha img.feliz{animation:fb-respira 2.4s ease-in-out infinite}
 .fb-carinha img.pula{animation:fb-pula .7s ease-out 2,fb-respira 2.4s ease-in-out 1.4s infinite}
 .fb-carinha img.tonta{animation:fb-tonta 2.6s ease-in-out infinite}
 
 /* botão ao lado da carinha (left/bottom vêm do cálculo; centralizado na altura em que está) */
-.tela .fb-overlay .fb-cena .fb-botao{position:absolute;right:0;width:auto;z-index:4;transform:translateY(50%);display:inline-flex;align-items:center;justify-content:center;gap:8px;white-space:nowrap;font-size:clamp(14px,4.4cqw,19px);padding-left:10px;padding-right:10px}
+.tela .fb-overlay .fb-cena .fb-botao{position:absolute;right:0;width:auto;z-index:5;transform:translateY(50%);display:inline-flex;align-items:center;justify-content:center;gap:8px;white-space:nowrap;font-size:clamp(14px,4.4cqw,19px);padding-left:10px;padding-right:10px}
 .fb-botao svg{flex:none}
 
 @keyframes fb-fade{from{opacity:0}to{opacity:1}}
 @keyframes fb-pop{from{transform:scale(.6);opacity:0}to{transform:scale(1);opacity:1}}
 @keyframes fb-entra{from{transform:translateY(18px) scale(.7);opacity:0}to{transform:none;opacity:1}}
-@keyframes fb-respira{0%,100%{transform:scale(1)}50%{transform:scale(1.03)}}
-@keyframes fb-pula{0%,100%{transform:translateY(0)}40%{transform:translateY(-22px)}}
-@keyframes fb-tonta{0%,100%{transform:rotate(-4deg)}50%{transform:rotate(4deg)}}
+@keyframes fb-respira{0%,100%{transform:scale(1)}50%{transform:scale(1.025)}}
+@keyframes fb-pula{0%,100%{transform:translateY(0)}40%{transform:translateY(-12px)}}
+@keyframes fb-tonta{0%,100%{transform:rotate(-3.5deg)}50%{transform:rotate(3.5deg)}}
 @media (prefers-reduced-motion: reduce){
   .fb-balao,.fb-carinha,.fb-carinha img,.fb-overlay.escuro{animation:none !important}
 }

@@ -4,10 +4,10 @@ import aliceAvatar from './assets/alice-avatar.png';
 import lucaVideo from './assets/luca-falando.mp4';
 import lucaParado from './assets/luca-parado.jpg';
 import lucaAvatar from './assets/luca-avatar.png';
-import aliceFeliz from './assets/carinhas/alice-feliz.webp';
-import aliceTriste from './assets/carinhas/alice-triste.webp';
-import lucaFeliz from './assets/carinhas/luca-feliz.webp';
-import lucaTriste from './assets/carinhas/luca-triste.webp';
+import aliceFeliz from './assets/carinhas/alice-feliz.png';
+import aliceTriste from './assets/carinhas/alice-triste.png';
+import lucaFeliz from './assets/carinhas/luca-feliz.png';
+import lucaTriste from './assets/carinhas/luca-triste.png';
 
 // Quem conta a história (a criança escolhe). Quem conta a história também dá o feedback no fim da partida.
 export const NARRADORES = {
@@ -16,10 +16,18 @@ export const NARRADORES = {
 };
 
 // Carinhas do feedback: feliz (2 e 3 estrelas, ou acertou) e tonta (1 estrela, ou errou).
-// asp = largura / altura da imagem; tipX/tipY = ponto no alto da cabeça onde encosta a ponta do balão (fração da imagem).
-const ALICE = { asp: 444 / 460, tipX: 0.52, tipY: 0.1 };
-const LUCA = { asp: 489 / 460, tipX: 0.5, tipY: 0.1 };
+// As duas olham para a direita, para o lado do balão.
+// asp = largura / altura da imagem; boca = onde encosta a ponta do balão (fração da largura / altura da imagem);
+// joelho = por onde o "rabinho" do balão desce, do lado direito do rosto, sem cobrir os olhos.
+const ALICE = { asp: 444 / 460, joelho: [0.97, 0.74] };
+const LUCA = { asp: 489 / 460, joelho: [0.99, 0.8] };
 export const CARINHAS = {
-  alice: { feliz: { img: aliceFeliz, ...ALICE }, triste: { img: aliceTriste, ...ALICE } },
-  luca: { feliz: { img: lucaFeliz, ...LUCA }, triste: { img: lucaTriste, ...LUCA } },
+  alice: {
+    feliz: { img: aliceFeliz, ...ALICE, boca: [0.7, 0.665] },
+    triste: { img: aliceTriste, ...ALICE, boca: [0.75, 0.64] },
+  },
+  luca: {
+    feliz: { img: lucaFeliz, ...LUCA, boca: [0.67, 0.75] },
+    triste: { img: lucaTriste, ...LUCA, boca: [0.67, 0.74] },
+  },
 };
