@@ -118,6 +118,9 @@ function Inicio({ onJogar }) {
 }
 
 const COR_NOME = { verde: '#3fa03d', amarelo: '#d99a00', vermelho: '#e5484d' };
+// cor da dica: depois de 10 s sem resposta, o cartão do alimento pisca nessa cor (a resposta certa)
+const COR_DICA = { verde: '#3fae4a', amarelo: '#f4b400', vermelho: '#e5484d' };
+
 const DESC = {
   verde: 'Faz muito bem ao corpo e pode comer sempre!',
   amarelo: 'Pode comer, mas sem exagerar.',
@@ -143,6 +146,15 @@ function Seta() {
   );
 }
 
+// casinha (ícone "home" do Material Icons, Google, licença Apache 2.0), no botão "Voltar ao Menu"
+function Casa() {
+  return (
+    <svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true">
+      <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z" fill="currentColor" />
+    </svg>
+  );
+}
+
 function Recarregar() {
   return (
     <svg viewBox="0 0 24 24" width="28" height="28" aria-hidden="true">
@@ -158,6 +170,7 @@ function Jogo({ onSair, narrador }) {
   const [acertos, setAcertos] = useState(0);
   const [respostas, setRespostas] = useState([]); // o que a criança respondeu em cada alimento (aba "Desempenho")
   const [escolha, setEscolha] = useState(null);
+  const [dica, setDica] = useState(false);       // demorou para responder: o cartão pisca na cor certa
   const [fim, setFim] = useState(false);
   const [semente, setSemente] = useState(() => Math.floor(Math.random() * 6)); // sorteia qual dos feedbacks da mesma situação aparece
 
@@ -165,6 +178,14 @@ function Jogo({ onSair, narrador }) {
   const respondido = escolha !== null;
   const acertou = respondido && escolha === alimento.cor;
   const ultima = indice + 1 >= RODADAS;
+
+  // 10 segundos sem escolher a cor: o cartão do alimento começa a piscar, devagar, na cor da resposta certa
+  useEffect(() => {
+    setDica(false);
+    if (respondido || fim) return undefined;
+    const id = setTimeout(() => setDica(true), 10000);
+    return () => clearTimeout(id);
+  }, [indice, respondido, fim]);
 
   const escolher = (cor) => {
     if (respondido) return;
@@ -204,7 +225,7 @@ function Jogo({ onSair, narrador }) {
           texto={texto}
           botao={<><Recarregar />Jogar novamente</>}
           onBotao={reiniciar}
-          botao2="Voltar ao Menu"
+          botao2={<><Casa />Voltar ao Menu</>}
           onBotao2={onSair}
           topo="38%"
         />
@@ -222,7 +243,7 @@ function Jogo({ onSair, narrador }) {
         <div className="colunaSemaforo">
           <Semaforo acesa={respondido ? escolha : null} onEscolher={escolher} desativado={respondido} />
         </div>
-        <div key={indice} className="cartao">
+        <div key={indice} className={`cartao${dica && !respondido ? ' dica' : ''}`} style={{ '--dica': COR_DICA[alimento.cor] }}>
           <img src={alimento.imagem} alt={alimento.nome} />
           <span>{alimento.nome}</span>
         </div>

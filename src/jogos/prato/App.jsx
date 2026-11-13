@@ -136,6 +136,15 @@ function Estrela({ cheia }) {
   );
 }
 
+// casinha (ícone "home" do Material Icons, Google, licença Apache 2.0), no botão "Voltar ao Menu"
+function Casa() {
+  return (
+    <svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true">
+      <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z" fill="currentColor" />
+    </svg>
+  );
+}
+
 function Recarregar() {
   return (
     <svg viewBox="0 0 24 24" width="28" height="28" aria-hidden="true">
@@ -349,7 +358,7 @@ function Jogo({ onSair, narrador }) {
           texto={texto}
           botao={<><Recarregar />Jogar novamente</>}
           onBotao={reiniciar}
-          botao2="Voltar ao Menu"
+          botao2={<><Casa />Voltar ao Menu</>}
           onBotao2={onSair}
           topo="36%"
         />
