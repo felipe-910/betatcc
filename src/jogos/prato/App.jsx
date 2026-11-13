@@ -30,7 +30,7 @@ import zonaDirBot from './assets/zona-dirBot.png';
 import xadrez from './assets/xadrez.jpg';
 
 /* ---------- Dados do jogo ---------- */
-// grupo: usado só para ver se o prato ficou variado (as divisões do prato não têm categoria).
+// grupo: usado só na avaliação do prato (as divisões do prato não têm categoria).
 // bom: false = alimento processado (consumir com menos frequência)
 const ALIMENTOS = [
   { nome: 'Arroz', imagem: arroz, grupo: 'carboidratos', bom: true },
@@ -174,7 +174,8 @@ function Inicio({ onJogar }) {
 }
 
 /* ---------- Prato com os alimentos escolhidos ---------- */
-// jogando = true: as divisões vazias piscam e os alimentos do prato podem ser arrastados (para outra divisão ou de volta)
+// jogando = true: as divisões que ainda têm espaço piscam (a grande pisca até ter 2 alimentos)
+// e os alimentos do prato podem ser arrastados (para outra divisão ou de volta para a bandeja)
 function PratoMontado({ escolhas, jogando, zonaRefs, onPegar, className = '' }) {
   return (
     <div className={`pratoBox ${className}`}>
@@ -190,7 +191,7 @@ function PratoMontado({ escolhas, jogando, zonaRefs, onPegar, className = '' }) 
             className="zona"
             style={{ left: `${x0 * 100}%`, top: `${y0 * 100}%`, width: `${(x1 - x0) * 100}%`, height: `${(y1 - y0) * 100}%` }}
           >
-            {jogando && lista.length === 0 && <img className="mascara" src={MASCARA[d.secao]} alt="" draggable={false} />}
+            {jogando && lista.length < d.cap && <img className="mascara" src={MASCARA[d.secao]} alt="" draggable={false} />}
             {lista.map((alimento, k) => (
               <img
                 key={alimento.nome}
@@ -227,8 +228,8 @@ function Jogo({ onSair, narrador }) {
   }, [fim]);
   useEffect(() => { if (tempo === 0 && !fim) setFim('tempo'); }, [tempo, fim]);
 
-  // o prato fica pronto quando todas as divisões têm pelo menos um alimento
-  const pronto = escolhas.every((l) => l.length > 0);
+  // o prato fica pronto quando está cheio: 2 alimentos na divisão grande e 1 em cada uma das outras
+  const pronto = escolhas.every((l, i) => l.length === DIVISOES[i].cap);
 
   // coloca na divisão escolhida; se ela já estiver cheia, o mais antigo volta para a bandeja
   const colocar = (alimento, i) => setEscolhas((e) => {
@@ -283,44 +284,48 @@ function Jogo({ onSair, narrador }) {
   if (fim) {
     const feitas = escolhas.flat();
     const completo = fim === 'completo';
-    // As divisões não têm categoria: o que conta é o prato ser variado (ter carboidrato, proteína e
-    // legume/verdura, em qualquer divisão), quantos alimentos processados tem e se tem arroz e feijão.
-    const variado = new Set(feitas.map((a) => a.grupo)).size === 3;
-    const processados = feitas.filter((a) => !a.bom).length;
+    // Um prato completo tem 4 coisas (não importa em qual divisão cada alimento está):
+    //   arroz e feijão · uma proteína (carne, frango, ovo, linguiça ou nuggets) · um legume ou verdura · nenhum processado
+    // 3 estrelas = tem tudo; 2 = falta só uma coisa; 1 = faltam duas ou mais (ou o tempo acabou).
     const temArroz = feitas.some((a) => a.nome === 'Arroz');
     const temFeijao = feitas.some((a) => a.nome === 'Feijão');
-    // escolhas a ajustar: cada alimento processado, e o prato não ser variado
-    const problemas = processados + (variado ? 0 : 1);
-    // só UM feedback por rodada; positivo = 2 ou 3 estrelas, negativo = 1 estrela
+    const arrozFeijao = temArroz && temFeijao;
+    const proteina = feitas.some((a) => a.grupo === 'proteinas');
+    const legume = feitas.some((a) => a.grupo === 'legumes');
+    const processados = feitas.filter((a) => !a.bom).length;
+    const faltas = [!arrozFeijao, !proteina, !legume, processados > 0].filter(Boolean).length;
+    // só UM feedback por rodada (o texto combina com as estrelas: positivo = 2 ou 3, negativo = 1)
     let fb;
     let estrelas;
     if (!completo) {
       fb = FEEDBACKS_NEG.poucos; estrelas = 1;                      // tempo acabou: prato incompleto
-    } else if (problemas >= 2) {
-      fb = FEEDBACKS_NEG.ajustes; estrelas = 1;                     // muitas escolhas precisam de ajustes
-    } else if (!variado) {
-      fb = !temArroz && !temFeijao ? FEEDBACKS_NEG.semArrozFeijao : FEEDBACKS_NEG.poucos; estrelas = 1; // pouco variado
-    } else if (processados === 1) {
-      fb = FEEDBACKS.orientacao; estrelas = 2;                      // variado, mas com um alimento de consumo menos frequente
-    } else if (temArroz && temFeijao) {
-      fb = FEEDBACKS.completo; estrelas = 3;                        // variado, sem processados, com arroz e feijão
+    } else if (faltas === 0) {
+      fb = FEEDBACKS.completo; estrelas = 3;                        // prato completo
+    } else if (faltas === 1) {
+      estrelas = 2;
+      fb = !arrozFeijao ? FEEDBACKS.semArrozFeijao                  // faltou arroz e/ou feijão
+        : FEEDBACKS.orientacao;                                     // faltou proteína ou verdura, ou tem um processado
     } else {
-      fb = FEEDBACKS.semArrozFeijao; estrelas = 2;                  // variado, mas sem arroz e/ou feijão
+      estrelas = 1;
+      fb = !temArroz && !temFeijao ? FEEDBACKS_NEG.semArrozFeijao   // sem arroz e sem feijão
+        : processados > 0 ? FEEDBACKS_NEG.ajustes                   // várias escolhas para ajustar, com processado
+          : FEEDBACKS_NEG.poucos;                                   // prato pouco variado
     }
     const perfeito = estrelas === 3;
     const { titulo, texto } = Array.isArray(fb) ? fb[semente % fb.length] : fb;
     // frase curta para a aba "Desempenho" dos pais
     const qtd = `${feitas.length} ${feitas.length === 1 ? 'alimento' : 'alimentos'}`;
     const ajustes = [
-      !variado && 'pouco variado',
+      !arrozFeijao && (!temArroz && !temFeijao ? 'sem arroz e feijão' : !temArroz ? 'sem arroz' : 'sem feijão'),
+      !proteina && 'sem proteína',
+      !legume && 'sem legume ou verdura',
       processados > 0 && `${processados} ${processados === 1 ? 'alimento processado' : 'alimentos processados'}`,
-      !(temArroz && temFeijao) && (!temArroz && !temFeijao ? 'sem arroz e feijão' : !temArroz ? 'sem arroz' : 'sem feijão'),
     ].filter(Boolean);
     const resumo = !completo
       ? `Tempo acabou com ${qtd} no prato`
       : perfeito
         ? `Prato completo e equilibrado (${qtd})`
-        : `Prato completo (${qtd}): ${ajustes.join(', ')}`;
+        : `Prato montado (${qtd}): ${ajustes.join(', ')}`;
     // para a aba "Desempenho": o prato como a criança montou (o id é o nome do arquivo da imagem)
     const idDe = (nome) => nome.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
     const detalhes = {
