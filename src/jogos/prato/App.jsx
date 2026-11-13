@@ -118,6 +118,14 @@ const montarBandeja = () => {
 const fmt = (s) => `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`;
 
 /* ---------- Ícones (SVG, sem emojis) ---------- */
+// casinha (ícone "home" do Material Icons, Google, licença Apache 2.0): voltar ao menu, nas telas de resultado
+function Casa() {
+  return (
+    <svg viewBox="0 0 24 24" width="34" height="34" aria-hidden="true">
+      <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z" fill="#fff" />
+    </svg>
+  );
+}
 function Seta() {
   return (
     <svg viewBox="0 0 32 32" width="34" height="34" aria-hidden="true">
@@ -151,7 +159,7 @@ function Tela({ titulo, onVoltar, direita, tema, children }) {
     <div className={`tela${tema ? ` ${tema}` : ''}`}>
       <div className="xadrez" style={{ backgroundImage: `url(${xadrez})` }} />
       <div className="header">
-        <button className="voltar" onClick={onVoltar} aria-label="Voltar" style={{ visibility: onVoltar ? 'visible' : 'hidden' }}><Seta /></button>
+        <button className="voltar" onClick={onVoltar} aria-label={tema === 'creme' ? 'Voltar ao menu' : 'Voltar'} style={{ visibility: onVoltar ? 'visible' : 'hidden' }}>{tema === 'creme' ? <Casa /> : <Seta />}</button>
         <div className="titulo">{titulo}</div>
         <div className="direita">{direita}</div>
       </div>
