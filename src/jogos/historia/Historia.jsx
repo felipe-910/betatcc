@@ -117,7 +117,7 @@ function Historia2({ jogo, titulo, narrador, onFim, onVoltar }) {
   const reserva = falas.reduce((a, b) => (b.length > a.length ? b : a), '');
   const [i, setI] = useState(0);
   const [falando, setFalando] = useState(false);
-  const [perguntar, setPerguntar] = useState(false); // terminou a história: "Deseja ouvir novamente?"
+  const [perguntar, setPerguntar] = useState(false); // terminou a história: "Você entendeu?"
   const video = useRef(null);
 
   useEffect(() => {
@@ -153,10 +153,11 @@ function Historia2({ jogo, titulo, narrador, onFim, onVoltar }) {
       {perguntar ? (
         <div className="hs-dialogo hs-pergunta">
           <div className="hs-nome" style={{ background: narrador.cor, borderColor: narrador.borda }}>{narrador.nome}</div>
-          <p className="hs-pergunta-texto">Deseja ouvir novamente?</p>
+          <p className="hs-pergunta-texto">Você entendeu?</p>
+          {/* Sim: vai para o minijogo. Não: a história começa de novo */}
           <div className="hs-pergunta-botoes">
-            <button className="hs-proxima hs-sim" onClick={ouvirDeNovo}>Sim</button>
-            <button className="hs-proxima hs-nao" onClick={() => onFim(narrador.id)}>Não</button>
+            <button className="hs-proxima hs-sim" onClick={() => onFim(narrador.id)}>Sim</button>
+            <button className="hs-proxima hs-nao" onClick={ouvirDeNovo}>Não</button>
           </div>
         </div>
       ) : (

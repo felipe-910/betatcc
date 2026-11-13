@@ -11,7 +11,10 @@ button{font:inherit;border:0;cursor:pointer;background:none;-webkit-tap-highligh
 /* ---------- estrutura de tela ---------- */
 .tela{position:relative;max-width:440px;height:100%;margin:0 auto;display:flex;flex-direction:column;overflow:hidden;background:var(--bg);container-type:inline-size;user-select:none;-webkit-user-select:none}
 .header{position:relative;z-index:4;display:flex;align-items:center;gap:6px;padding:12px 12px 4px;flex:none}
-.voltar{width:40px;height:40px;font-size:34px;font-weight:900;color:#fff;line-height:1;text-shadow:0 2px 0 #0002}
+.voltar{width:44px;height:44px;flex:none}
+/* botão de voltar: círculo verde com a seta branca */
+button.voltar{width:44px;height:44px;flex:none;display:flex;align-items:center;justify-content:center;padding:0;border-radius:50%;background:#4cb04a;border-bottom:4px solid #3a9a38;box-shadow:0 3px 0 #0002;filter:none}
+button.voltar svg{width:26px;height:26px}
 .titulo{flex:1;text-align:center;font-size:26px;font-weight:900;color:var(--verde);-webkit-text-stroke:6px #fff;paint-order:stroke fill;text-shadow:0 3px 0 #0003;letter-spacing:.3px}
 .botao{background:var(--verde);color:#fff;font-size:22px;font-weight:900;padding:14px 40px;border-radius:30px;border-bottom:5px solid var(--verde-esc)}
 .botao.pequeno{font-size:17px;padding:10px 8px;border-bottom-width:4px}

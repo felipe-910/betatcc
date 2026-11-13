@@ -20,6 +20,13 @@ const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
 const mix = (a, b, p) => a + (b - a) * p;
 
 /* ---------- Ícones (SVG) ---------- */
+function Seta() {
+  return (
+    <svg viewBox="0 0 32 32" width="34" height="34" aria-hidden="true">
+      <path d="M26 16H7M15 7l-9 9 9 9" fill="none" stroke="#fff" strokeWidth="3.4" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
 function Estrela({ cheia }) {
   return (
     <svg viewBox="0 0 24 24" width="40" height="40" aria-hidden="true">
@@ -45,7 +52,7 @@ function Tela({ titulo, onVoltar, tema, cenario, children }) {
   return (
     <div className={`tela${tema ? ` ${tema}` : ''}${cenario ? ' comCenario' : ''}`} style={cenario ? { backgroundImage: `url(${CENARIO})` } : undefined}>
       <div className="header">
-        <button className="voltar" onClick={onVoltar} aria-label="Voltar" style={{ visibility: onVoltar ? 'visible' : 'hidden' }}>←</button>
+        <button className="voltar" onClick={onVoltar} aria-label="Voltar" style={{ visibility: onVoltar ? 'visible' : 'hidden' }}><Seta /></button>
         <div className="titulo">{titulo}</div>
         <div className="voltar" />
       </div>

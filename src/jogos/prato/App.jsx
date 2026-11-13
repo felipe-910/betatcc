@@ -30,7 +30,8 @@ import zonaDirBot from './assets/zona-dirBot.png';
 import xadrez from './assets/xadrez.jpg';
 
 /* ---------- Dados do jogo ---------- */
-// grupo: a que parte do prato o alimento pertence. bom: false = alimento processado (sem exagerar)
+// grupo: usado só para ver se o prato ficou variado (as divisões do prato não têm categoria).
+// bom: false = alimento processado (consumir com menos frequência)
 const ALIMENTOS = [
   { nome: 'Arroz', imagem: arroz, grupo: 'carboidratos', bom: true },
   { nome: 'Batata', imagem: batata, grupo: 'carboidratos', bom: true },
@@ -53,11 +54,12 @@ const ALIMENTOS = [
   { nome: 'Couve', imagem: couve, grupo: 'legumes', bom: true },
 ];
 
-// As 3 divisões, na ordem do jogo. cap = quantos alimentos cabem na divisão.
-const GRUPOS = [
-  { id: 'carboidratos', secao: 'esq', cap: 2, singular: 'carboidrato', rotulo: '1ª divisão: carboidratos (até 2 alimentos)' },
-  { id: 'proteinas', secao: 'dirTop', cap: 1, singular: 'proteína', rotulo: '2ª divisão: proteínas' },
-  { id: 'legumes', secao: 'dirBot', cap: 1, singular: 'legume ou verdura', rotulo: '3ª divisão: legumes e verduras' },
+// As 3 divisões do prato. Elas não têm categoria: a criança coloca qualquer alimento em qualquer uma.
+// cap = quantos alimentos cabem (a grande, da esquerda, leva 2; as outras, 1 cada).
+const DIVISOES = [
+  { secao: 'esq', cap: 2 },
+  { secao: 'dirTop', cap: 1 },
+  { secao: 'dirBot', cap: 1 },
 ];
 
 const MASCARA = { esq: zonaEsq, dirTop: zonaDirTop, dirBot: zonaDirBot }; // formato real de cada divisão
@@ -96,21 +98,22 @@ const FEEDBACKS_NEG = {
 };
 const TEMPO_TOTAL = 5 * 60; // 5 minutos por rodada
 const N_SLOTS = 8;          // quadrados da bandeja
-const N_CERTOS = 4;         // quantos alimentos da divisão aparecem na bandeja (o resto são "intrusos")
 
 const embaralhar = (v) => [...v].sort(() => Math.random() - 0.5);
-// Bandeja de uma etapa: alimentos da divisão misturados com alimentos de outros grupos,
-// para a criança poder errar e ser corrigida. Alimentos já colocados antes não voltam.
-const montarOpcoes = (etapa, usados) => {
-  const g = GRUPOS[etapa];
-  const certos = embaralhar(ALIMENTOS.filter((a) => a.grupo === g.id && !usados.has(a.nome)));
-  const errados = embaralhar(ALIMENTOS.filter((a) => a.grupo !== g.id && !usados.has(a.nome)));
-  // nos carboidratos, arroz e feijão sempre aparecem (os feedbacks falam deles)
-  const fixos = g.id === 'carboidratos' ? certos.filter((x) => x.nome === 'Arroz' || x.nome === 'Feijão') : [];
-  const outros = certos.filter((x) => !fixos.includes(x));
-  const nc = Math.min(certos.length, g.id === 'proteinas' ? N_CERTOS + 1 : N_CERTOS);
-  const certosBandeja = [...fixos, ...outros].slice(0, Math.max(nc, fixos.length));
-  return embaralhar([...certosBandeja, ...errados.slice(0, N_SLOTS - certosBandeja.length)]);
+const sortear = (lista, n) => embaralhar(lista).slice(0, n);
+// Bandeja da rodada (8 alimentos variados): arroz e feijão sempre aparecem (os feedbacks falam deles),
+// mais 1 carboidrato, 2 proteínas, 1 alimento processado (linguiça ou nuggets) e 2 legumes/verduras.
+const montarBandeja = () => {
+  const de = (grupo, bom) => ALIMENTOS.filter((a) => a.grupo === grupo && (bom === undefined || a.bom === bom));
+  const fixos = ALIMENTOS.filter((a) => a.nome === 'Arroz' || a.nome === 'Feijão');
+  const outrosCarbo = de('carboidratos').filter((a) => !fixos.includes(a));
+  return embaralhar([
+    ...fixos,
+    ...sortear(outrosCarbo, 1),
+    ...sortear(de('proteinas', true), 2),
+    ...sortear(de('proteinas', false), 1),
+    ...sortear(de('legumes'), 2),
+  ]);
 };
 const fmt = (s) => `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`;
 
@@ -162,12 +165,7 @@ function Inicio({ onJogar }) {
     <Tela titulo="Monte seu prato" onVoltar={voltarParaHistorias}>
       <div className="centro">
         <img src={prato} className="inicioImg" alt="" />
-        <p className="txt">Arraste os alimentos certos para cada divisão do prato e monte uma refeição completa!</p>
-        <div className="legenda">
-          <b><i className="ponto" style={{ background: '#e5a000' }} /> 1ª divisão: carboidratos</b>
-          <b><i className="ponto" style={{ background: '#e5484d' }} /> 2ª divisão: proteínas</b>
-          <b><i className="ponto" style={{ background: '#3fb618' }} /> 3ª divisão: legumes e verduras</b>
-        </div>
+        <p className="txt">Arraste os alimentos para o prato e monte uma refeição bem variada!</p>
         <p className="txt pequenoTxt">Você tem 5 minutos para terminar.</p>
         <button className="botao" onClick={onJogar}>Jogar</button>
       </div>
@@ -176,32 +174,32 @@ function Inicio({ onJogar }) {
 }
 
 /* ---------- Prato com os alimentos escolhidos ---------- */
-function PratoMontado({ escolhas, ativa, zonaRefs, onPegar, className = '' }) {
+// jogando = true: as divisões vazias piscam e os alimentos do prato podem ser arrastados (para outra divisão ou de volta)
+function PratoMontado({ escolhas, jogando, zonaRefs, onPegar, className = '' }) {
   return (
     <div className={`pratoBox ${className}`}>
       <img className="pratoImg" src={prato} alt="Prato com três divisões" draggable={false} />
-      {GRUPOS.map((g, i) => {
-        const [x0, y0, x1, y1] = SECOES[g.secao];
+      {DIVISOES.map((d, i) => {
+        const [x0, y0, x1, y1] = SECOES[d.secao];
         const lista = escolhas[i] || [];
-        const ehAtiva = ativa === i;
         const pos = POSICOES[Math.max(1, lista.length)];
         return (
           <div
-            key={g.id}
+            key={d.secao}
             ref={(el) => { if (zonaRefs) zonaRefs.current[i] = el; }}
             className="zona"
             style={{ left: `${x0 * 100}%`, top: `${y0 * 100}%`, width: `${(x1 - x0) * 100}%`, height: `${(y1 - y0) * 100}%` }}
           >
-            {ehAtiva && lista.length < g.cap && <img className="mascara" src={MASCARA[g.secao]} alt="" draggable={false} />}
+            {jogando && lista.length === 0 && <img className="mascara" src={MASCARA[d.secao]} alt="" draggable={false} />}
             {lista.map((alimento, k) => (
               <img
                 key={alimento.nome}
-                className={`porcao ${ehAtiva && onPegar ? 'pegavel' : ''}`}
+                className={`porcao ${jogando && onPegar ? 'pegavel' : ''}`}
                 src={alimento.imagem}
                 alt={alimento.nome}
                 draggable={false}
-                style={{ left: `${pos[k][0] * 100}%`, top: `${pos[k][1] * 100}%`, width: `${TAM_ITEM[g.secao] * 100}%` }}
-                onPointerDown={ehAtiva && onPegar ? (e) => onPegar(e, alimento) : undefined}
+                style={{ left: `${pos[k][0] * 100}%`, top: `${pos[k][1] * 100}%`, width: `${TAM_ITEM[d.secao] * 100}%` }}
+                onPointerDown={jogando && onPegar ? (e) => onPegar(e, alimento) : undefined}
               />
             ))}
           </div>
@@ -213,16 +211,13 @@ function PratoMontado({ escolhas, ativa, zonaRefs, onPegar, className = '' }) {
 
 /* ---------- Jogo ---------- */
 function Jogo({ onSair, narrador }) {
-  const [etapa, setEtapa] = useState(0);                       // 0, 1, 2
   const [escolhas, setEscolhas] = useState([[], [], []]);      // alimentos colocados em cada divisão
-  const [opcoes, setOpcoes] = useState(() => montarOpcoes(0, new Set()));
+  const [opcoes, setOpcoes] = useState(montarBandeja);
   const [tempo, setTempo] = useState(TEMPO_TOTAL);
   const [fim, setFim] = useState(null);                        // null | 'completo' | 'tempo'
   const [arrasto, setArrasto] = useState(null);                // { alimento, x, y, w }
   const [semente, setSemente] = useState(() => Math.floor(Math.random() * 6)); // sorteia qual dos feedbacks da mesma situação aparece
   const zonaRefs = useRef([]);
-  const etapaRef = useRef(0);
-  etapaRef.current = etapa;
 
   // cronômetro de 5 minutos para a rodada toda
   useEffect(() => {
@@ -232,19 +227,17 @@ function Jogo({ onSair, narrador }) {
   }, [fim]);
   useEffect(() => { if (tempo === 0 && !fim) setFim('tempo'); }, [tempo, fim]);
 
-  const grupo = GRUPOS[etapa];
-  const naDivisao = escolhas[etapa];
-  const ultima = etapa === 2;
+  // o prato fica pronto quando todas as divisões têm pelo menos um alimento
+  const pronto = escolhas.every((l) => l.length > 0);
 
-  // coloca na divisão atual; se já estiver cheia, o mais antigo volta para a bandeja
-  const colocar = (alimento) => setEscolhas((e) => {
-    const n = e.map((l) => [...l]);
-    const lista = n[etapaRef.current];
-    if (lista.length >= GRUPOS[etapaRef.current].cap) lista.shift();
-    lista.push(alimento);
+  // coloca na divisão escolhida; se ela já estiver cheia, o mais antigo volta para a bandeja
+  const colocar = (alimento, i) => setEscolhas((e) => {
+    const n = e.map((l) => l.filter((a) => a !== alimento));
+    if (n[i].length >= DIVISOES[i].cap) n[i].shift();
+    n[i].push(alimento);
     return n;
   });
-  const tirar = (alimento) => setEscolhas((e) => e.map((l, i) => (i === etapaRef.current ? l.filter((a) => a !== alimento) : l)));
+  const tirar = (alimento) => setEscolhas((e) => e.map((l) => l.filter((a) => a !== alimento)));
 
   const comecarArrasto = (e, alimento, doPrato) => {
     if (fim) return;
@@ -257,31 +250,31 @@ function Jogo({ onSair, narrador }) {
       window.removeEventListener('pointermove', mover);
       window.removeEventListener('pointerup', soltar);
       window.removeEventListener('pointercancel', soltar);
-      const z = zonaRefs.current[etapaRef.current];
-      let dentro = false;
-      if (z && ev.type === 'pointerup') {
-        const r = z.getBoundingClientRect();
-        const m = 10;
-        dentro = ev.clientX >= r.left - m && ev.clientX <= r.right + m && ev.clientY >= r.top - m && ev.clientY <= r.bottom + m;
+      // em qual divisão soltou (a mais próxima do dedo, se estiver em cima de mais de uma)
+      let destino = -1;
+      if (ev.type === 'pointerup') {
+        let melhor = Infinity;
+        zonaRefs.current.forEach((z, i) => {
+          if (!z) return;
+          const r = z.getBoundingClientRect();
+          const m = 10;
+          const dentro = ev.clientX >= r.left - m && ev.clientX <= r.right + m && ev.clientY >= r.top - m && ev.clientY <= r.bottom + m;
+          const d = Math.hypot(ev.clientX - (r.left + r.right) / 2, ev.clientY - (r.top + r.bottom) / 2);
+          if (dentro && d < melhor) { melhor = d; destino = i; }
+        });
       }
       setArrasto(null);
-      if (dentro) colocar(alimento);
+      if (destino >= 0) colocar(alimento, destino);
     };
     window.addEventListener('pointermove', mover);
     window.addEventListener('pointerup', soltar);
     window.addEventListener('pointercancel', soltar);
   };
 
-  const avancar = () => {
-    if (naDivisao.length === 0) return;
-    if (ultima) { setFim('completo'); return; }
-    const usados = new Set(escolhas.flat().map((a) => a.nome));
-    setOpcoes(montarOpcoes(etapa + 1, usados));
-    setEtapa((n) => n + 1);
-  };
+  const finalizar = () => { if (pronto) setFim('completo'); };
 
   const reiniciar = () => {
-    setEtapa(0); setEscolhas([[], [], []]); setOpcoes(montarOpcoes(0, new Set()));
+    setEscolhas([[], [], []]); setOpcoes(montarBandeja());
     setTempo(TEMPO_TOTAL); setFim(null); setArrasto(null);
     setSemente(Math.floor(Math.random() * 6));
   };
@@ -290,48 +283,54 @@ function Jogo({ onSair, narrador }) {
   if (fim) {
     const feitas = escolhas.flat();
     const completo = fim === 'completo';
-    // alimentos no lugar errado: [alimento, divisão onde foi colocado]
-    const erros = escolhas.flatMap((l, i) => l.filter((a) => a.grupo !== GRUPOS[i].id).map((a) => [a, GRUPOS[i]]));
-    const processados = feitas.filter((a) => !a.bom);
-    const perfeito = completo && erros.length === 0 && processados.length === 0;
-    const estrelas = !completo ? 1 : perfeito ? 3 : erros.length <= 1 ? 2 : 1;
+    // As divisões não têm categoria: o que conta é o prato ser variado (ter carboidrato, proteína e
+    // legume/verdura, em qualquer divisão), quantos alimentos processados tem e se tem arroz e feijão.
+    const variado = new Set(feitas.map((a) => a.grupo)).size === 3;
+    const processados = feitas.filter((a) => !a.bom).length;
     const temArroz = feitas.some((a) => a.nome === 'Arroz');
     const temFeijao = feitas.some((a) => a.nome === 'Feijão');
-    // alimentos com problema (no lugar errado ou processados), sem contar o mesmo alimento duas vezes
-    const problemas = new Set([...erros.map(([a]) => a.nome), ...processados.map((a) => a.nome)]).size;
-    // só UM feedback por rodada: primeiro vê se o prato está adequado, depois confere arroz e feijão
+    // escolhas a ajustar: cada alimento processado, e o prato não ser variado
+    const problemas = processados + (variado ? 0 : 1);
+    // só UM feedback por rodada; positivo = 2 ou 3 estrelas, negativo = 1 estrela
     let fb;
+    let estrelas;
     if (!completo) {
-      fb = FEEDBACKS_NEG.poucos;                                    // tempo acabou: prato incompleto/pouco variado
-    } else if (problemas === 0) {
-      fb = temArroz && temFeijao ? FEEDBACKS.completo : FEEDBACKS.semArrozFeijao;
-    } else if (problemas === 1 && erros.length === 0) {
-      fb = FEEDBACKS.orientacao;                                    // tudo no lugar certo, mas com um alimento de consumo menos frequente
+      fb = FEEDBACKS_NEG.poucos; estrelas = 1;                      // tempo acabou: prato incompleto
     } else if (problemas >= 2) {
-      fb = FEEDBACKS_NEG.ajustes;                                   // muitas escolhas precisam de ajustes
-    } else if (!temArroz && !temFeijao) {
-      fb = FEEDBACKS_NEG.semArrozFeijao;
+      fb = FEEDBACKS_NEG.ajustes; estrelas = 1;                     // muitas escolhas precisam de ajustes
+    } else if (!variado) {
+      fb = !temArroz && !temFeijao ? FEEDBACKS_NEG.semArrozFeijao : FEEDBACKS_NEG.poucos; estrelas = 1; // pouco variado
+    } else if (processados === 1) {
+      fb = FEEDBACKS.orientacao; estrelas = 2;                      // variado, mas com um alimento de consumo menos frequente
+    } else if (temArroz && temFeijao) {
+      fb = FEEDBACKS.completo; estrelas = 3;                        // variado, sem processados, com arroz e feijão
     } else {
-      fb = FEEDBACKS_NEG.poucos;
+      fb = FEEDBACKS.semArrozFeijao; estrelas = 2;                  // variado, mas sem arroz e/ou feijão
     }
+    const perfeito = estrelas === 3;
     const { titulo, texto } = Array.isArray(fb) ? fb[semente % fb.length] : fb;
     // frase curta para a aba "Desempenho" dos pais
     const qtd = `${feitas.length} ${feitas.length === 1 ? 'alimento' : 'alimentos'}`;
+    const ajustes = [
+      !variado && 'pouco variado',
+      processados > 0 && `${processados} ${processados === 1 ? 'alimento processado' : 'alimentos processados'}`,
+      !(temArroz && temFeijao) && (!temArroz && !temFeijao ? 'sem arroz e feijão' : !temArroz ? 'sem arroz' : 'sem feijão'),
+    ].filter(Boolean);
     const resumo = !completo
       ? `Tempo acabou com ${qtd} no prato`
       : perfeito
         ? `Prato completo e equilibrado (${qtd})`
-        : `Prato completo com ${problemas} ${problemas === 1 ? 'alimento' : 'alimentos'} para ajustar`;
+        : `Prato completo (${qtd}): ${ajustes.join(', ')}`;
     // para a aba "Desempenho": o prato como a criança montou (o id é o nome do arquivo da imagem)
     const idDe = (nome) => nome.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
     const detalhes = {
       tipo: 'prato',
-      divisoes: GRUPOS.map((g, i) => ({ secao: g.secao, alimentos: escolhas[i].map((a) => ({ id: idDe(a.nome), nome: a.nome })) })),
+      divisoes: DIVISOES.map((d, i) => ({ secao: d.secao, alimentos: escolhas[i].map((a) => ({ id: idDe(a.nome), nome: a.nome })) })),
     };
     return (
       <Tela titulo="Monte seu prato" onVoltar={onSair} tema="creme">
         <div className="resCard">
-          <PratoMontado escolhas={escolhas} ativa={-1} className="pratoFim" />
+          <PratoMontado escolhas={escolhas} className="pratoFim" />
           <div className="resDireita">
             <div className="estrelas">{[0, 1, 2].map((n) => <Estrela key={n} cheia={n < estrelas} />)}</div>
             <div className="resPill">Seu resultado</div>
@@ -357,12 +356,12 @@ function Jogo({ onSair, narrador }) {
   return (
     <Tela titulo="Monte seu prato" onVoltar={onSair} direita={<span className={`relogio ${urgente ? 'urgente' : ''}`}>{fmt(tempo)}</span>}>
       <div className="areaPrato">
-        <PratoMontado escolhas={escolhas} ativa={etapa} zonaRefs={zonaRefs} onPegar={(e, a) => comecarArrasto(e, a, true)} />
+        <PratoMontado escolhas={escolhas} jogando zonaRefs={zonaRefs} onPegar={(e, a) => comecarArrasto(e, a, true)} />
       </div>
 
       <div className="inferior">
-        <p className="instrucao">{grupo.rotulo}</p>
-        <div className="bandeja" key={etapa}>
+        <p className="instrucao">Arraste os alimentos para o prato</p>
+        <div className="bandeja">
           {Array.from({ length: N_SLOTS }, (_, i) => {
             const a = opcoes[i];
             const aqui = a && !noPrato.has(a.nome);
@@ -383,7 +382,7 @@ function Jogo({ onSair, narrador }) {
             );
           })}
         </div>
-        <button className="finalizar" disabled={naDivisao.length === 0} onClick={avancar}>{ultima ? 'Finalizar prato' : 'Próximo'}</button>
+        <button className="finalizar" disabled={!pronto} onClick={finalizar}>Finalizar prato</button>
       </div>
 
       {arrasto && (

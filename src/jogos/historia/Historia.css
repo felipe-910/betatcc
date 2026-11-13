@@ -1,7 +1,10 @@
 /* Telas de história (escolha do narrador + caixa de diálogo). Tudo com prefixo hs- para não misturar com o CSS dos jogos. */
 .hs-tela{position:relative;max-width:520px;height:100%;margin:0 auto;display:flex;flex-direction:column;overflow:hidden;background:#9dd4d1;container-type:inline-size;font-family:'Nunito',system-ui,sans-serif;color:#2d3a3a}
 .hs-header{position:relative;z-index:4;display:flex;align-items:center;gap:6px;padding:14px 14px 8px;flex:none}
-.hs-voltar{width:44px;height:44px;display:flex;align-items:center;justify-content:center;filter:drop-shadow(0 2px 0 #0002)}
+.hs-voltar{width:44px;height:44px;flex:none}
+/* botão de voltar: círculo verde com a seta branca */
+button.hs-voltar{width:44px;height:44px;flex:none;display:flex;align-items:center;justify-content:center;padding:0;border-radius:50%;background:#4cb04a;border-bottom:4px solid #3a9a38;box-shadow:0 3px 0 #0002;filter:none}
+button.hs-voltar svg{width:26px;height:26px}
 .hs-titulo{flex:1;text-align:center;font-size:30px;font-weight:900;color:#6aaa7e;-webkit-text-stroke:7px #fff;paint-order:stroke fill;text-shadow:0 4px 0 #0003;letter-spacing:.2px}
 
 /* quadro branco (na escolha mostra o jogo; na história é onde o personagem aparece) */
@@ -44,7 +47,8 @@
   .hs-tela{max-width:1240px;display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);grid-template-rows:auto minmax(0,1fr);column-gap:36px;padding:0 36px 30px}
   .hs-header{grid-column:1/-1;padding:18px 0 16px}
   .hs-titulo{font-size:42px;-webkit-text-stroke:8px #fff}
-  .hs-voltar{width:52px;height:52px}
+  button.hs-voltar{width:52px;height:52px}
+  button.hs-voltar svg{width:30px;height:30px}
   .hs-palco{grid-column:1;grid-row:2;margin:0;border-width:4px;border-radius:34px}
   .hs-jogo-img{max-width:78%;max-height:78%}
   .hs-painel,.hs-dialogo{grid-column:2;grid-row:2;align-self:center;margin:0;width:100%}

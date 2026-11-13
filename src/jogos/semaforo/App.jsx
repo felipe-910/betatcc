@@ -74,7 +74,7 @@ function Tela({ titulo, onVoltar, tema, children }) {
   return (
     <div className={`tela${tema ? ` ${tema}` : ''}`} style={tema ? undefined : { backgroundImage: `url(${cenario})` }}>
       <div className="header">
-        <button className="voltar" onClick={onVoltar} style={{ visibility: onVoltar ? 'visible' : 'hidden' }}>←</button>
+        <button className="voltar" onClick={onVoltar} aria-label="Voltar" style={{ visibility: onVoltar ? 'visible' : 'hidden' }}><Seta /></button>
         <div className="titulo">{titulo}</div>
         <div className="voltar" />
       </div>
@@ -131,6 +131,14 @@ function Estrela({ cheia }) {
         d="M12 2.6l2.9 6 6.6.9-4.8 4.6 1.2 6.5L12 17.4l-5.9 3.2 1.2-6.5L2.5 9.5l6.6-.9z"
         fill={cheia ? '#f7c531' : '#e3e3e3'} stroke={cheia ? '#d99a00' : '#c4c4c4'} strokeWidth="1.4" strokeLinejoin="round"
       />
+    </svg>
+  );
+}
+
+function Seta() {
+  return (
+    <svg viewBox="0 0 32 32" width="34" height="34" aria-hidden="true">
+      <path d="M26 16H7M15 7l-9 9 9 9" fill="none" stroke="#fff" strokeWidth="3.4" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
   );
 }
