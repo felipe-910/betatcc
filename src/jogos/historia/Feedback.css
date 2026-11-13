@@ -19,8 +19,12 @@
 .fb-carinha{position:absolute;left:0;z-index:3;animation:fb-entra .4s cubic-bezier(.3,1.5,.6,1) both}
 .fb-carinha img{display:block;width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 4px 3px #00000026);user-select:none;-webkit-user-drag:none}
 
-/* botão ao lado da carinha (left/bottom vêm do cálculo; centralizado na altura em que está) */
-.tela .fb-overlay .fb-cena .fb-botao{position:absolute;right:0;width:auto;z-index:5;transform:translateY(50%);display:inline-flex;align-items:center;justify-content:center;gap:8px;white-space:nowrap;font-size:clamp(14px,4.4cqw,19px);padding-left:10px;padding-right:10px}
+/* botões ao lado da carinha (posição vem do cálculo), um embaixo do outro e centralizados na altura dela */
+.fb-botoes{position:absolute;right:0;z-index:5;display:flex;flex-direction:column;justify-content:center;gap:10px}
+.tela .fb-overlay .fb-cena .fb-botao{position:static;width:100%;display:inline-flex;align-items:center;justify-content:center;gap:8px;white-space:nowrap;font-size:clamp(14px,4.4cqw,19px);padding-left:10px;padding-right:10px}
+/* "Voltar ao Menu": fundo branco e texto verde, para não confundir com o botão principal */
+.fb-botao2{width:100%;display:inline-flex;align-items:center;justify-content:center;white-space:nowrap;background:#fff;color:#4f8a5d;border:3px solid #6e9e77;border-radius:32px;padding:9px 10px;font-size:clamp(14px,4.4cqw,19px);font-weight:900;box-shadow:0 4px 0 #0000001a}
+.fb-botao2:active{transform:translateY(2px);box-shadow:0 2px 0 #0000001a}
 .fb-botao svg{flex:none}
 
 @keyframes fb-fade{from{opacity:0}to{opacity:1}}
@@ -39,4 +43,5 @@
   .fb-nome{font-size:21px;top:-24px;padding:4px 20px}
   .fb-caixa{padding-top:26px}
   .tela .fb-overlay .fb-cena .fb-botao{font-size:clamp(17px,1.5vw,22px);padding:14px 22px}
+  .fb-botao2{font-size:clamp(17px,1.5vw,22px);padding:11px 22px}
 }

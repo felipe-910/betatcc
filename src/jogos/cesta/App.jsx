@@ -20,14 +20,6 @@ const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
 const mix = (a, b, p) => a + (b - a) * p;
 
 /* ---------- Ícones (SVG) ---------- */
-// casinha (ícone "home" do Material Icons, Google, licença Apache 2.0): voltar ao menu, nas telas de resultado
-function Casa() {
-  return (
-    <svg viewBox="0 0 24 24" width="34" height="34" aria-hidden="true">
-      <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z" fill="#fff" />
-    </svg>
-  );
-}
 function Seta() {
   return (
     <svg viewBox="0 0 32 32" width="34" height="34" aria-hidden="true">
@@ -60,7 +52,7 @@ function Tela({ titulo, onVoltar, tema, cenario, children }) {
   return (
     <div className={`tela${tema ? ` ${tema}` : ''}${cenario ? ' comCenario' : ''}`} style={cenario ? { backgroundImage: `url(${CENARIO})` } : undefined}>
       <div className="header">
-        <button className="voltar" onClick={onVoltar} aria-label={tema === 'creme' ? 'Voltar ao menu' : 'Voltar'} style={{ visibility: onVoltar ? 'visible' : 'hidden' }}>{tema === 'creme' ? <Casa /> : <Seta />}</button>
+        <button className="voltar" onClick={onVoltar} aria-label="Voltar" style={{ visibility: onVoltar ? 'visible' : 'hidden' }}><Seta /></button>
         <div className="titulo">{titulo}</div>
         <div className="voltar" />
       </div>
@@ -357,7 +349,7 @@ export function Resultado({ r, onJogar, onSair, semente0, narrador }) {
   const lista = (certo) => pegos.filter((a) => a.certo === certo).map(({ id, nome, qtd }) => ({ id, nome, qtd }));
   const detalhes = { tipo: 'cesta', certos: lista(true), errados: lista(false) };
   return (
-    <Tela titulo="Cesta Saudável" onVoltar={onSair} tema="creme">
+    <Tela titulo="Cesta Saudável" tema="creme">
       <div className="resCard">
         <img className="cestaFim" src={CESTA} alt="" />
         <div className="resDireita">
@@ -374,6 +366,8 @@ export function Resultado({ r, onJogar, onSair, semente0, narrador }) {
         texto={texto}
         botao={<><Recarregar />Jogar novamente</>}
         onBotao={onJogar}
+        botao2="Voltar ao Menu"
+        onBotao2={onSair}
         topo="38%"
       />
     </Tela>

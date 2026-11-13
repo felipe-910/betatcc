@@ -14,7 +14,7 @@ const ETIQUETA = 20;   // quanto a etiqueta do nome sobe acima da caixa
 const RABO = 16;       // comprimento do rabinho, abaixo da caixa
 const FOLGA = 9;       // espaço entre a ponta do rabinho e o alto da cabeça
 
-export function FeedbackPersonagem({ narrador, positivo, titulo: tituloOrig, texto: textoOrig, botao, onBotao, escurecer, topo }) {
+export function FeedbackPersonagem({ narrador, positivo, titulo: tituloOrig, texto: textoOrig, botao, onBotao, botao2, onBotao2, escurecer, topo }) {
   const quem = NARRADORES[narrador] ?? NARRADORES.alice;
   const face = (CARINHAS[narrador] ?? CARINHAS.alice)[positivo ? 'feliz' : 'triste'];
   // a voz gravada (Alice ou Luca) lê o feedback e o texto vai aparecendo junto (a caixa já nasce do tamanho final)
@@ -98,13 +98,11 @@ export function FeedbackPersonagem({ narrador, positivo, titulo: tituloOrig, tex
             <div className="fb-carinha" style={{ top: L.faceTop, width: L.fw, height: L.fh }}>
               <img key={face.img} src={face.img} alt={positivo ? 'Personagem feliz' : 'Personagem tonto'} draggable={false} />
             </div>
-            <button
-              className="botao pequeno botaoFb fb-botao"
-              onClick={onBotao}
-              style={{ left: L.fw + 12, bottom: L.levantar + L.fh * 0.32 }}
-            >
-              {botao}
-            </button>
+            {/* botões ao lado da carinha: o principal (verde) e, nas telas de resultado, "Voltar ao Menu" (branco) */}
+            <div className="fb-botoes" style={{ left: L.fw + 12, top: L.faceTop, height: L.fh }}>
+              <button className="botao pequeno botaoFb fb-botao" onClick={onBotao}>{botao}</button>
+              {botao2 && <button className="fb-botao2" onClick={onBotao2}>{botao2}</button>}
+            </div>
           </>
         )}
       </div>

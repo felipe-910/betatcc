@@ -19,7 +19,6 @@ button{font:inherit;border:0;cursor:pointer;background:none;-webkit-tap-highligh
 /* botão de voltar: círculo verde com a seta branca */
 button.voltar{width:44px;height:44px;flex:none;display:flex;align-items:center;justify-content:center;padding:0;border-radius:50%;background:#4cb04a;border-bottom:4px solid #3a9a38;box-shadow:0 3px 0 #0002;filter:none}
 button.voltar svg{width:26px;height:26px}
-.tela.creme button.voltar svg{width:28px;height:28px}
 .titulo{flex:1;text-align:center;font-size:30px;font-weight:900;color:#6aaa7e;-webkit-text-stroke:7px #fff;paint-order:stroke fill;text-shadow:0 4px 0 #0003;letter-spacing:.2px}
 .direita{width:56px;text-align:right}
 .relogio{font-size:19px;font-weight:900;color:#6aaa7e;-webkit-text-stroke:5px #fff;paint-order:stroke fill;text-shadow:0 2px 0 #0003}
