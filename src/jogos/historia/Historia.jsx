@@ -7,9 +7,9 @@ import fundoCesta from './assets/fundo-cesta.jpg';
 import fundoPrato from './assets/fundo-prato.jpg';
 
 // Cenário atrás do personagem enquanto ele conta a história (o semáforo não tem: fica o quadro branco de sempre)
-// inteiro: o cenário aparece todo, sem zoom (nas sobras dos lados vai uma cópia desfocada dele)
+// inteiro: o quadro fica do formato do cenário, para ele aparecer todo, sem zoom e sem sobrar espaço
 const CENARIOS = { cesta: { src: fundoCesta, inteiro: true }, prato: { src: fundoPrato } };
-const estiloCenario = (c) => (!c ? undefined : c.inteiro ? { '--cenario': `url(${c.src})` } : { backgroundImage: `url(${c.src})` });
+const estiloCenario = (c) => (c ? { backgroundImage: `url(${c.src})` } : undefined);
 
 /* ---------- Ícones ---------- */
 function Seta() {

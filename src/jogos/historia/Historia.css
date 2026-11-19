@@ -71,8 +71,8 @@ button.hs-voltar svg{width:26px;height:26px}
 /* história com cenário (cesta e prato): a imagem fica atrás do personagem, que não tem fundo */
 .hs-palco--cenario{background-color:#fff;background-size:cover;background-position:center bottom;background-repeat:no-repeat}
 .hs-boneco{background:transparent;user-select:none;-webkit-user-drag:none}
-/* cesta: o cenário aparece inteiro (contain), sem zoom; dos lados, a mesma imagem desfocada preenche a sobra */
-.hs-palco--inteiro::before,.hs-palco--inteiro::after{content:'';position:absolute;inset:0;background-image:var(--cenario);background-repeat:no-repeat;pointer-events:none}
-.hs-palco--inteiro::before{background-size:cover;background-position:center;filter:blur(18px) brightness(.92);transform:scale(1.15)}
-.hs-palco--inteiro::after{background-size:contain;background-position:center}
-.hs-palco--inteiro .hs-boneco{position:relative;z-index:1}
+/* cesta: o quadro fica do formato do cenário (3:4); assim ele aparece inteiro, sem zoom e sem sobrar espaço */
+.hs-palco--inteiro{aspect-ratio:3/4;align-self:center;width:auto;max-width:calc(100% - 28px)}
+@media (min-width:900px) and (min-aspect-ratio:1/1){
+  .hs-palco--inteiro{align-self:stretch;justify-self:center;max-width:100%}
+}
