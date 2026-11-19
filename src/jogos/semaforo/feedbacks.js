@@ -37,7 +37,7 @@ export const FEEDBACK_ALIMENTO = {
     amarelo: { titulo: 'Quase!', texto: 'A linguiça não encaixa no amarelo! Ela é um alimento industrializado e contém bastante sal. Por isso, devemos deixar para comer apenas de vez em quando!' },
     vermelho: { titulo: 'Muito bem!', texto: 'Você acertou! A linguiça deve ser consumida apenas de vez em quando. Que tal escolher um franguinho ou uma carne para deixar seu prato ainda mais nutritivo?' },
   },
-  bombom: { // no jogo aparece como "Bala"; o texto fala de doce
+  bombom: { // no jogo aparece como "Doce"
     verde: { titulo: 'Opa!', texto: 'Você pôs o doce na luz verde! Ele pode ser gostoso, mas tem bastante açúcar e não oferece muitos nutrientes para o nosso corpo. Por isso, não devemos comer doces todos os dias!' },
     amarelo: { titulo: 'Quase!', texto: 'O doce não encaixa no amarelo! Ele tem bastante açúcar e deve ser consumido apenas de vez em quando. Que tal experimentar uma fruta quando bater aquela vontade de comer algo docinho?' },
     vermelho: { titulo: 'Isso mesmo!', texto: 'Você acertou! Os doces devem ser consumidos apenas de vez em quando. Assim, podemos aproveitar outros alimentos que ajudam nosso corpo a crescer forte e saudável!' },

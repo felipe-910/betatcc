@@ -27,7 +27,7 @@ const LUZES = { verde: IMG.verde, amarelo: IMG.amarelo, vermelho: IMG.vermelho, 
 
 // 3 alimentos para cada cor. id = nome da imagem (usado na aba "Desempenho" dos pais).
 const ALIMENTOS = [
-  { id: 'bombom', nome: 'Bala', cor: 'vermelho', imagem: bala },
+  { id: 'bombom', nome: 'Doce', cor: 'vermelho', imagem: bala },
   { id: 'refri', nome: 'Refrigerante', cor: 'vermelho', imagem: refri },
   { id: 'linguica', nome: 'Linguiça', cor: 'vermelho', imagem: linguica },
   { id: 'queijo', nome: 'Queijo', cor: 'amarelo', imagem: queijo },
