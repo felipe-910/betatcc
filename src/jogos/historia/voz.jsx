@@ -31,6 +31,8 @@ export function destravarVoz() {
 export const vozDaHistoria = (narrador, jogo, indice) => VOZES[narrador]?.historia?.[jogo]?.[indice] ?? null;
 // Feedback: procurado pelo próprio texto (título + texto), assim não depende de como cada jogo sorteia.
 export const vozDoFeedback = (narrador, titulo, texto) => VOZES[narrador]?.feedback[`${titulo}\n${texto}`] ?? null;
+// "Você entendeu?" no fim da história
+export const vozDaPergunta = (narrador) => VOZES[narrador]?.pergunta ?? null;
 
 // Quantas letras já foram ditas no instante t.
 // marcas: [inicioLetra, fimLetra, inicioSeg, fimSeg] de cada palavra, na ordem do texto.

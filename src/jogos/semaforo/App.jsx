@@ -3,6 +3,7 @@ import './App.css';
 import { AvisaFim, voltarParaHistorias } from '../avisarPai.jsx';
 import Historia from '../historia/Historia.jsx';
 import { FeedbackPersonagem } from '../historia/Feedback.jsx';
+import { FEEDBACK_ALIMENTO } from './feedbacks.js';
 import verde from './assets/semaforo-verde.png';
 import amarelo from './assets/semaforo-amarelo.png';
 import vermelho from './assets/semaforo-vermelho.png';
@@ -178,6 +179,10 @@ function Jogo({ onSair, narrador }) {
   const respondido = escolha !== null;
   const acertou = respondido && escolha === alimento.cor;
   const ultima = indice + 1 >= RODADAS;
+  // texto do feedback: o do alimento para a cor escolhida (se faltar, o texto genérico de antes)
+  const fbAlimento = respondido
+    ? FEEDBACK_ALIMENTO[alimento.id]?.[escolha] ?? { titulo: acertou ? 'Muito bem!' : 'Quase!', texto: `${alimento.nome} fica no ${alimento.cor}. ${DESC[alimento.cor]}` }
+    : null;
 
   // 10 segundos sem escolher a cor: o cartão do alimento começa a piscar, devagar, na cor da resposta certa
   useEffect(() => {
@@ -253,8 +258,8 @@ function Jogo({ onSair, narrador }) {
           narrador={narrador}
           positivo={acertou}
           escurecer
-          titulo={acertou ? 'Muito bem!' : 'Quase!'}
-          texto={`${alimento.nome} fica no ${alimento.cor}. ${DESC[alimento.cor]}`}
+          titulo={fbAlimento.titulo}
+          texto={fbAlimento.texto}
           botao={ultima ? 'Resultado ➜' : 'Próximo ➜'}
           onBotao={proximo}
         />

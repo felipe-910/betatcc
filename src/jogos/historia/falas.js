@@ -13,7 +13,7 @@ export const FALAS = {
   ],
   semaforo: [
     "Agora que montamos a nossa Cesta Saudável para o piquenique, podemos ir de carro até o parque. Assim, chegaremos mais rápido!",
-    "Mas, enquanto estamos no caminho, precisamos prestar atenção ao semáforo. Ele ajuda a mamãe a saber quando pode seguir, quando precisa diminuir a velocidade e quando deve parar.",
+    "Mas, enquanto estamos no caminho, precisamos prestar atenção ao semáforo. Ele ajuda o motorista a saber quando pode seguir, quando precisa diminuir a velocidade e quando deve parar.",
     "Você sabe como ele funciona?",
     "Quando o semáforo está verde, podemos seguir. Quando está amarelo, precisamos diminuir a velocidade e ficar atentos. Quando está vermelho, precisamos parar.",
     "Muito bem! Agora que você já sabe como funciona o semáforo, vamos usá-lo de um jeito diferente? Vamos aprender sobre a frequência com que alguns alimentos podem fazer parte da nossa alimentação!",

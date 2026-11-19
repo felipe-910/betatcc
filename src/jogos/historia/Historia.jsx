@@ -2,7 +2,12 @@ import { useEffect, useRef, useState } from 'react';
 import './Historia.css';
 import { FALAS } from './falas.js';
 import { NARRADORES } from './personagens.js';
-import { destravarVoz, vozDaHistoria, useVozSincronizada } from './voz.jsx';
+import { destravarVoz, vozDaHistoria, vozDaPergunta, useVozSincronizada, TextoRevelado } from './voz.jsx';
+import fundoCesta from './assets/fundo-cesta.jpg';
+import fundoPrato from './assets/fundo-prato.jpg';
+
+// Cenário atrás do personagem enquanto ele conta a história (o semáforo não tem: fica o quadro branco de sempre)
+const CENARIOS = { cesta: fundoCesta, prato: fundoPrato };
 
 /* ---------- Ícones ---------- */
 function Seta() {
@@ -111,6 +116,28 @@ function CaixaFala({ narrador, texto, voz, reserva, indice, total, onFalando, on
   );
 }
 
+// "Você entendeu?": a voz faz a pergunta (o texto aparece junto) e o personagem mexe a boca enquanto fala
+const PERGUNTA = 'Você entendeu?';
+function Pergunta({ narrador, onFalando, onSim, onNao }) {
+  const voz = vozDaPergunta(narrador.id);
+  const sinc = useVozSincronizada(voz, PERGUNTA.length, 150);
+  const comVoz = !!voz && !sinc.falhou;
+  useEffect(() => { onFalando(comVoz && sinc.falando); }, [comVoz, sinc.falando, onFalando]);
+  useEffect(() => () => onFalando(false), [onFalando]);
+  const n = comVoz && !sinc.fim && !reduzMovimento() ? sinc.n : PERGUNTA.length;
+  return (
+    <div className="hs-dialogo hs-pergunta">
+      <div className="hs-nome" style={{ background: narrador.cor, borderColor: narrador.borda }}>{narrador.nome}</div>
+      <p className="hs-pergunta-texto" aria-label={PERGUNTA}><span aria-hidden="true"><TextoRevelado texto={PERGUNTA} n={n} /></span></p>
+      {/* Sim: vai para o minijogo. Não: a história começa de novo */}
+      <div className="hs-pergunta-botoes">
+        <button className="hs-proxima hs-sim" onClick={onSim}>Sim</button>
+        <button className="hs-proxima hs-nao" onClick={onNao}>Não</button>
+      </div>
+    </div>
+  );
+}
+
 function Historia2({ jogo, titulo, narrador, onFim, onVoltar }) {
   // cada narrador mostra o texto exatamente como fala na gravação (a Alice lê o texto original)
   const falas = FALAS[jogo].map((f, k) => vozDaHistoria(narrador.id, jogo, k)?.texto ?? f);
@@ -119,6 +146,14 @@ function Historia2({ jogo, titulo, narrador, onFim, onVoltar }) {
   const [falando, setFalando] = useState(false);
   const [perguntar, setPerguntar] = useState(false); // terminou a história: "Você entendeu?"
   const video = useRef(null);
+  const cenario = CENARIOS[jogo];
+
+  // com cenário, o personagem é uma imagem sem fundo: já carrega a animação para não piscar quando começar a falar
+  useEffect(() => {
+    if (!cenario) return;
+    const img = new Image();
+    img.src = narrador.semFundo.falando;
+  }, [cenario, narrador]);
 
   useEffect(() => {
     const v = video.current;
@@ -137,29 +172,30 @@ function Historia2({ jogo, titulo, narrador, onFim, onVoltar }) {
 
   return (
     <Tela titulo={titulo} onVoltar={onVoltar}>
-      <div className="hs-palco hs-palco--historia">
-        <video
-          ref={video}
-          className="hs-video"
-          src={narrador.video}
-          poster={narrador.parado}
-          muted
-          loop
-          playsInline
-          preload="auto"
-          aria-label={`${narrador.nome} contando a história`}
-        />
+      <div className={`hs-palco hs-palco--historia${cenario ? ' hs-palco--cenario' : ''}`} style={cenario ? { backgroundImage: `url(${cenario})` } : undefined}>
+        {cenario ? (
+          <img
+            className="hs-video hs-boneco"
+            src={falando ? narrador.semFundo.falando : narrador.semFundo.parado}
+            alt={`${narrador.nome} contando a história`}
+            draggable={false}
+          />
+        ) : (
+          <video
+            ref={video}
+            className="hs-video"
+            src={narrador.video}
+            poster={narrador.parado}
+            muted
+            loop
+            playsInline
+            preload="auto"
+            aria-label={`${narrador.nome} contando a história`}
+          />
+        )}
       </div>
       {perguntar ? (
-        <div className="hs-dialogo hs-pergunta">
-          <div className="hs-nome" style={{ background: narrador.cor, borderColor: narrador.borda }}>{narrador.nome}</div>
-          <p className="hs-pergunta-texto">Você entendeu?</p>
-          {/* Sim: vai para o minijogo. Não: a história começa de novo */}
-          <div className="hs-pergunta-botoes">
-            <button className="hs-proxima hs-sim" onClick={() => onFim(narrador.id)}>Sim</button>
-            <button className="hs-proxima hs-nao" onClick={ouvirDeNovo}>Não</button>
-          </div>
-        </div>
+        <Pergunta narrador={narrador} onFalando={setFalando} onSim={() => onFim(narrador.id)} onNao={ouvirDeNovo} />
       ) : (
       <CaixaFala key={i} narrador={narrador} texto={falas[i]} voz={vozDaHistoria(narrador.id, jogo, i)} reserva={reserva} indice={i} total={falas.length} onFalando={setFalando} onProxima={proxima} />
       )}
