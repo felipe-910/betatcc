@@ -5,7 +5,7 @@
 export const TIPOS = ['saudavel', 'consumivel', 'naoSaudavel'];
 
 // Alimentos vindos dos jogos Semáforo Saudável e Monte seu prato (menos arroz e feijão), mais os da cesta.
-// A classificação segue o Semáforo: verde = saudavel; amarelo (frango, carne, ovo) = consumivel; vermelho (nuggets) = naoSaudavel.
+// Na cesta, frango, carne e ovo também são alimentos corretos (saudavel); macarrão e queijo não entram no jogo.
 // Para trocar a classificação de um alimento, é só mudar o "tipo" dele aqui.
 // Para incluir um alimento novo: coloque o PNG em src/assets, importe em assets.js e adicione uma linha aqui.
 export const ALIMENTOS = [
@@ -17,7 +17,6 @@ export const ALIMENTOS = [
   { id: 'abobora', nome: 'Abóbora', tipo: 'saudavel' },
   { id: 'batata', nome: 'Batata', tipo: 'saudavel' },
   { id: 'brocolis', nome: 'Brócolis', tipo: 'saudavel' },
-  { id: 'macarrao', nome: 'Macarrão', tipo: 'saudavel' },
   { id: 'milho', nome: 'Milho', tipo: 'saudavel' },
   { id: 'tomate', nome: 'Tomate', tipo: 'saudavel' },
   { id: 'melancia', nome: 'Melancia', tipo: 'saudavel' },
@@ -28,11 +27,10 @@ export const ALIMENTOS = [
   { id: 'alface', nome: 'Alface', tipo: 'saudavel' },
   { id: 'agriao', nome: 'Agrião', tipo: 'saudavel' },
   { id: 'couve', nome: 'Couve', tipo: 'saudavel' },
-  { id: 'queijo', nome: 'Queijo', tipo: 'consumivel' },
   { id: 'salsicha', nome: 'Salsicha', tipo: 'consumivel' },
-  { id: 'carne', nome: 'Carne', tipo: 'consumivel' },
-  { id: 'frango', nome: 'Frango', tipo: 'consumivel' },
-  { id: 'ovo', nome: 'Ovo', tipo: 'consumivel' },
+  { id: 'carne', nome: 'Carne', tipo: 'saudavel' },
+  { id: 'frango', nome: 'Frango', tipo: 'saudavel' },
+  { id: 'ovo', nome: 'Ovo', tipo: 'saudavel' },
   { id: 'bombom', nome: 'Bombom', tipo: 'naoSaudavel' },
   { id: 'refri', nome: 'Refrigerante', tipo: 'naoSaudavel' },
   { id: 'nuggets', nome: 'Nuggets', tipo: 'naoSaudavel' },

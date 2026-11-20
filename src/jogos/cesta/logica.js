@@ -3,9 +3,10 @@ import { FEEDBACKS, GRUPOS_FEEDBACK } from './feedbacks.js';
 
 export const TOTAL_ITENS = 30; // alimentos que caem em cada rodada
 // Quantos de cada tipo caem na rodada (a ordem é sorteada). A rodada é sempre justa e comparável.
-export const COMPOSICAO = { saudavel: 16, consumivel: 7, naoSaudavel: 7 };
+// (sem o queijo, a salsicha é o único "consumível": cai 3 vezes, como cada alimento para evitar)
+export const COMPOSICAO = { saudavel: 18, consumivel: 3, naoSaudavel: 9 };
 // "Muitos" alimentos saudáveis = cerca de dois terços dos que caíram (ficar parado no meio não basta)
-export const MUITOS_SAUDAVEIS = 11;
+export const MUITOS_SAUDAVEIS = 12;
 export const POUCOS_SAUDAVEIS = 4;
 
 export const embaralhar = (v, rnd = Math.random) => {
