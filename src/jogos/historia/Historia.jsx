@@ -7,9 +7,7 @@ import fundoCesta from './assets/fundo-cesta.jpg';
 import fundoPrato from './assets/fundo-prato.jpg';
 
 // Cenário atrás do personagem enquanto ele conta a história (o semáforo não tem: fica o quadro branco de sempre)
-// inteiro: o quadro fica do formato do cenário, para ele aparecer todo, sem zoom e sem sobrar espaço
-const CENARIOS = { cesta: { src: fundoCesta, inteiro: true }, prato: { src: fundoPrato } };
-const estiloCenario = (c) => (c ? { backgroundImage: `url(${c.src})` } : undefined);
+const CENARIOS = { cesta: fundoCesta, prato: fundoPrato };
 
 /* ---------- Ícones ---------- */
 function Seta() {
@@ -174,7 +172,7 @@ function Historia2({ jogo, titulo, narrador, onFim, onVoltar }) {
 
   return (
     <Tela titulo={titulo} onVoltar={onVoltar}>
-      <div className={`hs-palco hs-palco--historia${cenario ? ' hs-palco--cenario' : ''}${cenario?.inteiro ? ' hs-palco--inteiro' : ''}`} style={estiloCenario(cenario)}>
+      <div className={`hs-palco hs-palco--historia${cenario ? ' hs-palco--cenario' : ''}`} style={cenario ? { backgroundImage: `url(${cenario})` } : undefined}>
         {cenario ? (
           <img
             className="hs-video hs-boneco"
